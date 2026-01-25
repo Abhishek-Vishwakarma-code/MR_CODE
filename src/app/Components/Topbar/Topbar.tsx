@@ -233,7 +233,6 @@ import { useRouter, useParams } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { BsList } from "react-icons/bs";
-
 import { auth } from "@/firebase/firebase";
 import Logout from "../Buttons/Logout";
 import Timer from "../Timer/Timer";
@@ -256,7 +255,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
   const handleProblemChange = (isForward: boolean) => {
     if (!pid) return;
 
-    const { order } = problems[pid] as unknown as Problem;
+    const { order } = problems[pid] as unknown as  Problem;
     const direction = isForward ? 1 : -1;
     const nextOrder = order + direction;
 

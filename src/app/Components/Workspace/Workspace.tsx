@@ -5,7 +5,7 @@ import ProblemDescription from "./ProblemDescription/ProblemDescription";
 import { Problem } from "@/utils/types/problem";
 import  Confetti from "react-confetti"
 import useWindowSize from "@/hooks/useWindowSize";
-import React from "react";
+import React, { useState } from "react";
 const Split = dynamic(() => import("react-split"), { ssr: false });
 
 type WorkspaceProps = {
@@ -14,18 +14,20 @@ type WorkspaceProps = {
 
 export default function Workspace({ problem }: { problem: Problem }) {
   const {width,height} = useWindowSize();
-  const {success,setSuccess} = React.useState(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [solved,setSolved] = useState(false);
   return (
     <Split className="flex h-screen" minSize={0}>
-      <ProblemDescription problem={problem} _solved={false} />
+      <ProblemDescription problem={problem} _solved={solved} />
       <div className="bg-dark-fill-2">
-        <Playground problem={problem} setSuccess={setSuccess} />
+        <Playground problem={problem} setSuccess={setSuccess} setSolved={setSolved}/>
         {success && <Confetti gravity={0.3} tweenDuration={4000} width={width - 1} height={height - 1}/>}
       </div>
 
     </Split>
   );
 }
+
 // import { useState } from "react";
 // import Split from "react-split";
 // import ProblemDescription from "./ProblemDescription/ProblemDescription";

@@ -1,12 +1,35 @@
-import React from 'react';
-import { AiOutlineFullscreen, AiOutlineSetting } from 'react-icons/ai';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineFullscreen, AiOutlineFullscreenExit, AiOutlineSetting } from 'react-icons/ai';
 
 type PreferenceNavProps = {
-
+   
 };
 
 const PreferenceNav: React.FC<PreferenceNavProps> = () => {
+    const [isFullScreen,setIsFullScreen] = useState(false);
+     const handleFullScreen = () => {
+        if(isFullScreen) {
+            document.exitFullscreen();
+        }
+        else{
+            document.documentElement.requestFullscreen();
+        }
+        setIsFullScreen(!isFullScreen);
+    }
+useEffect(()=> { 
+    function exitHandler(e: any) {
+        setIsFullScreen(false);
+        return;
+    }
+    setIsFullScreen(true);
+    if(document.addEventListener){
+        document.addEventListener("fullscreenchange",exitHandler);
+        document.addEventListener("webkitfullscreenchange",exitHandler);
+        document.addEventListener("mozfullscreenchange",exitHandler);
+        document.addEventListener("MSFullscreenChange",exitHandler);
 
+    }
+},[isFullScreen]);
     return <div className='flex items-center justify-between bg-dark-layer-2 h-11 w-full'>
         <div className='flex items-center text-white'>
             <button className='flex cursor-pointer items-center rounded focus:outline-none bg-dark-fill-3 text-dark-label-2 hover:bg-dark-fill-2  px-2 py-1.5 font-medium'>
@@ -24,9 +47,9 @@ const PreferenceNav: React.FC<PreferenceNavProps> = () => {
                     Settings
                 </div>
             </button>
-            <button className='PreferenceBtn group'>
+            <button className='PreferenceBtn group' onClick={handleFullScreen}>
                 <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-                    <AiOutlineFullscreen />
+                    {!isFullScreen ?<AiOutlineFullscreen /> : <AiOutlineFullscreenExit />}
                 </div>
                 <div className="preferenceBtn-tooltip">
                     Fullscreen

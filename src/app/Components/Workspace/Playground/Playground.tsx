@@ -161,16 +161,28 @@ import { pid } from 'process';
 import { useRouter } from 'next/router';
 import { problems } from '@/mockProblems/problems';
 import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import useLocalStorage from '@/hooks/useLocalStorage';
 
 type PlaygroundProps = {
   problem: Problem;
   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
+export interface ISettings {
+  fontSize: string,
+  settingsModalIsOpen: boolean,
+  dropdownIsOpen: boolean,
+}
 const Playground: React.FC<PlaygroundProps> = ({ problem,setSuccess,setSolved }) => {
   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
   const [userCode,setUserCode] = useState<string>(problem.starterCode);
+  const [fontSize,setfontSize] = useLocalStorage("MR.C-fontSize","16px");
+  const [Settings,setSettings] = useState<ISettings>({
+    fontSize: fontSize,
+    settingsModalIsOpen: false,
+    dropdownIsOpen: false,
+  });
+  
   const [user] = useAuthState(auth);
   const {query: {pid}} = useRouter();
   const handleSubmit = async () => {
@@ -238,7 +250,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem,setSuccess,setSolved })
   };
   return (
     <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
-      <PreferenceNav />
+      <PreferenceNav Settings={Settings} setSettings={setSettings}/>
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"
@@ -252,7 +264,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem,setSuccess,setSolved })
             theme={vscodeDark}
             onChange={onchange}
             extensions={[javascript({ jsx: true })]}
-            style={{ fontSize: 16 }}
+            style={{ fontSize: Settings.fontSize }}
           />
         </div>
 

@@ -1,38 +1,42 @@
 import { BsCheckLg, BsChevronDown } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
 import { ISettings } from "../Workspace/Playground/Playground";
-import React from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
 const EDITOR_FONT_SIZES = ["12px", "13px", "14px", "15px", "16px", "17px", "18px"];
 
-interface SettingsModalProps{
+interface SettingsModalProps {
     settings: ISettings;
     setSettings: React.Dispatch<React.SetStateAction<ISettings>>;
-
 }
-const SettingsModal: React.FC<SettingsModalProps> = ({settings,setSettings}) => {
-    const [fontSize,setfontSize]= useLocalStorage("MR.C-fontSize","16px");
-    const handleClickDropdown = (e: React.MouseEvent<HTMLButtonElement,MouseEvent>) => {
+
+const SettingsModal: React.FC<SettingsModalProps> = ({ setSettings, settings }) => {
+    const [fontSize, setFontSize] = useLocalStorage("lcc-fontSize", "16px");
+
+    const handleClickDropdown = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        setSettings({...settings,dropdownIsOpen: !settings.dropdownIsOpen});
-    }
+        setSettings({ ...settings, dropdownIsOpen: !settings.dropdownIsOpen });
+    };
     return (
         <div className='text-white z-40'>
             <div aria-modal='true' role='dialog' className='fixed inset-0 overflow-y-auto z-modal'>
                 <div className='flex min-h-screen items-center justify-center px-4'>
                     {/* overlay */}
-                    <div className='opacity-100' onClick={() => setSettings({...settings,settingsModalIsOpen: false}) }>
+                    <div
+                        className='opacity-100'
+                        onClick={() => setSettings({ ...settings, settingsModalIsOpen: false })}
+                    >
                         <div className='fixed inset-0 bg-gray-8 opacity-60'></div>
                     </div>
 
-                    <div className='my-8 inline-block min-w-full transform rounded-[13px] text-left transition-all bg-overlay-3 md:min-w-[420px] shadow-level4 shadow-lg p-0 bg-[rgb(40,40,40)] w-[600px] !overflow-visible opacity-100 scale-100'>
+                    <div className='my-8 inline-block min-w-full transform rounded-[13px] text-left transition-all bg-overlay-3 md:min-w-[420px] shadow-level4 shadow-lg p-0 bg-dark-layer-1 w-[600px] overflow-visible! opacity-100 scale-100'>
                         {/* setting header */}
                         <div className='flex items-center border-b px-5 py-4 text-lg font-medium  border-dark-divider-border-2'>
-                            settings
-                            <button className='ml-auto cursor-pointer rounded transition-all' onClick={() => {
-                                setSettings({...settings,settingsModalIsOpen:false})
-                             }}>
+                            Settings
+                            <button
+                                className='ml-auto cursor-pointer rounded transition-all'
+                                onClick={() => setSettings({ ...settings, settingsModalIsOpen: false })}
+                            >
                                 <IoClose />
                             </button>
                         </div>
@@ -69,8 +73,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({settings,setSettings}) => 
                                                         fontSize={fontSize}
                                                         selectedOption={settings.fontSize}
                                                         handleFontSizeChange={(fontSize) => {
-                                                            setfontSize(fontSize);
-                                                            setSettings({...settings, fontSize: fontSize});
+                                                            setFontSize(fontSize);
+                                                            setSettings({ ...settings, fontSize: fontSize });
                                                         }}
                                                     />
                                                 ))}
@@ -91,14 +95,16 @@ export default SettingsModal;
 interface SettingsListItemProps {
     fontSize: string;
     selectedOption: string;
-    handleFontSizeChange: () => void;
+    handleFontSizeChange: (fontSize: string) => void;
 }
 
 const SettingsListItem: React.FC<SettingsListItemProps> = ({ fontSize, selectedOption, handleFontSizeChange }) => {
     return (
         <li className='relative flex h-8 cursor-pointer select-none py-1.5 pl-2 text-label-2 dark:text-dark-label-2 hover:bg-dark-fill-3 rounded-lg'>
-            <div className={`flex h-5 flex-1 items-center pr-2 ${selectedOption === fontSize ? "font-medium" : ""}`}
-            onClick={() => handleFontSizeChange(fontSize)}>
+            <div
+                className={`flex h-5 flex-1 items-center pr-2 ${selectedOption === fontSize ? "font-medium" : ""}`}
+                onClick={() => handleFontSizeChange(fontSize)}
+            >
                 <div className='whitespace-nowrap'>{fontSize}</div>
             </div>
             <span

@@ -132,20 +132,26 @@ function useGetProblems(setLoadingProblems: React.Dispatch<React.SetStateAction<
   return problems;
 }
 function useGetSolvedProblems() {
-  const [solvedProblems,setSolvedProblems] = useState<string[]>([]);
-  const [user] = useAuthState(auth); 
+  const [solvedProblems, setSolvedProblems] = useState<string[]>([]);
+  const [user] = useAuthState(auth);
+
   useEffect(() => {
-    const getsolvedProblems = async () => {
-      const userRef = doc(firestore,"users",user?.uid);
+    const getSolvedProblems = async () => {
+      if (!user) {
+        setSolvedProblems([]);
+        return;
+      }
+
+      const userRef = doc(firestore, "users", user.uid);
       const userDoc = await getDoc(userRef);
 
-      if(userDoc.exists()) {
-        setSolvedProblems(userDoc.data().solvedProblems);
+      if (userDoc.exists()) {
+        setSolvedProblems(userDoc.data().solvedProblems || []);
       }
-    }
-  
-    if (user) getsolvedProblems();
-    if(!user) setSolvedProblems([]);
-  },[user]);
+    };
+
+    getSolvedProblems();
+  }, [user]);
+
   return solvedProblems;
 }

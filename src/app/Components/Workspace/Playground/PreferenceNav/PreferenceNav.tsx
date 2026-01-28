@@ -1,67 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import { AiOutlineFullscreen, AiOutlineFullscreenExit, AiOutlineSetting } from 'react-icons/ai';
-import { ISettings } from '../Playground';
-import SettingsModal from '@/app/Components/Modals/SettingsModal';
+import React, { useEffect, useState } from "react";
+import {
+  AiOutlineFullscreen,
+  AiOutlineFullscreenExit,
+  AiOutlineSetting,
+} from "react-icons/ai";
+import { ISettings } from "../Playground";
+import SettingsModal from "@/app/Components/Modals/SettingsModal";
 
 type PreferenceNavProps = {
-   settings: ISettings;
-   setSettings: React.Dispatch<React.SetStateAction<ISettings>>;
-
+  settings: ISettings;
+  setSettings: React.Dispatch<React.SetStateAction<ISettings>>;
 };
 
-const PreferenceNav: React.FC<PreferenceNavProps> = (setSettings,settings) => {
-    const [isFullScreen,setIsFullScreen] = useState(false);
-     const handleFullScreen = () => {
-        if(isFullScreen) {
-            document.exitFullscreen();
-        }
-        else{
-            document.documentElement.requestFullscreen();
-        }
-        setIsFullScreen(!isFullScreen);
-    }
-useEffect(()=> { 
-    function exitHandler(e: any) {
-        setIsFullScreen(false);
-        return;
-    }
-    setIsFullScreen(true);
+const PreferenceNav: React.FC<PreferenceNavProps> = ({
+  settings,
+  setSettings,
+}) => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
-    if(document.addEventListener){
-        document.addEventListener("fullscreenchange",exitHandler);
-        document.addEventListener("webkitfullscreenchange",exitHandler);
-        document.addEventListener("mozfullscreenchange",exitHandler);
-        document.addEventListener("MSFullscreenChange",exitHandler);
-
+  const handleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
     }
-},[isFullScreen]);
-    return <div className='flex items-center justify-between bg-dark-layer-2 h-11 w-full'>
-        <div className='flex items-center text-white'>
-            <button className='flex cursor-pointer items-center rounded focus:outline-none bg-dark-fill-3 text-dark-label-2 hover:bg-dark-fill-2  px-2 py-1.5 font-medium'>
-                <div className='flex items-center px-1'>
-                    <div className='text-xs text-label-2 dark:text-dark-label-2'>JavaScript</div>
-                </div>
-            </button>
-        </div>
-        <div className="flex items-center m-2">
-            <button className='prefereenceBtn group' onClick={() =>setSettings({...setSettings,SettingsModalIsOpen: true})}>
-                <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-                    <AiOutlineSetting />
-                </div>
-                <div className="preferenceBtn-tooltip">
-                    settings
-                </div>
-            </button>
-            <button className='PreferenceBtn group' onClick={handleFullScreen}>
-                <div className="h-4 w-4 text-dark-gray-6 font-bold text-lg">
-                    {!isFullScreen ?<AiOutlineFullscreen /> : <AiOutlineFullscreenExit />}
-                </div>
-                <div className="preferenceBtn-tooltip">
-                    Fullscreen
-                </div>
-            </button>
-        </div>
-        {settings.settingsModalIsOpen && <SettingsModal settings={settings} setSettings={setSettings}/>}
+  };
+
+  useEffect(() => {
+    const onFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", onFullScreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", onFullScreenChange);
+  }, []);
+
+  return (
+    <div className="flex items-center justify-between bg-dark-layer-2 h-11 w-full">
+      <div className="flex items-center text-white">
+        <button className="flex items-center rounded bg-dark-fill-3 px-2 py-1.5 text-xs">
+          JavaScript
+        </button>
+      </div>
+
+      <div className="flex items-center m-2 gap-3">
+        {/* Settings */}
+        <button
+          className="preferenceBtn group"
+          onClick={() =>
+            setSettings((prev: any) => ({
+              ...prev,
+              settingsModalIsOpen: true,
+            }))
+          }
+        >
+          <AiOutlineSetting className="h-4 w-4 text-dark-gray-6" />
+        </button>
+
+        {/* Fullscreen */}
+        <button className="preferenceBtn group" onClick={handleFullScreen}>
+          {isFullScreen ? (
+            <AiOutlineFullscreenExit className="h-4 w-4 text-dark-gray-6" />
+          ) : (
+            <AiOutlineFullscreen className="h-4 w-4 text-dark-gray-6" />
+          )}
+        </button>
+      </div>
+
+      {settings.settingsModalIsOpen && (
+        <SettingsModal settings={settings} setSettings={setSettings} />
+      )}
     </div>
-}
+  );
+};
+
 export default PreferenceNav;

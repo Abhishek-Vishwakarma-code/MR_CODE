@@ -288,7 +288,7 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
         }`}
       >
         {/* Logo */}
-        <Link href="/" className="h-[22px] flex-1">
+        <Link href="/" className="h-[220px] flex-1 mt-5">
           <img src="/logo-full.png" alt="Logo" className="h-full" />
         </Link>
 

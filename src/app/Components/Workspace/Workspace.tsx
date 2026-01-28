@@ -1,32 +1,51 @@
 "use client";
-import dynamic from "next/dynamic";
-import Playground from "./Playground/Playground";
-import ProblemDescription from "./ProblemDescription/ProblemDescription";
-import { Problem } from "@/utils/types/problem";
-import  Confetti from "react-confetti"
-import useWindowSize from "@/hooks/useWindowSize";
+
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import ProblemDescription from "./ProblemDescription/ProblemDescription";
+import Playground from "./Playground/Playground";
+import { Problem } from "@/utils/types/problem";
+import Confetti from "react-confetti";
+import useWindowSize from "@/hooks/useWindowSize";
+
+// react-split MUST be dynamic in App Router
 const Split = dynamic(() => import("react-split"), { ssr: false });
 
 type WorkspaceProps = {
-  problem: Problem; // Fixed: Define the prop type
+  problem: Problem;
 };
 
-export default function Workspace({ problem }: { problem: Problem }) {
-  const {width,height} = useWindowSize();
-  const [success, setSuccess] = React.useState<boolean>(false);
-  const [solved,setSolved] = useState(false);
+const Workspace: React.FC<WorkspaceProps> = ({ problem }) => {
+  const { width, height } = useWindowSize();
+
+  const [success, setSuccess] = useState(false);
+  const [solved, setSolved] = useState(false);
+
   return (
     <Split className="flex h-screen" minSize={0}>
       <ProblemDescription problem={problem} _solved={solved} />
-      <div className="bg-dark-fill-2">
-        <Playground problem={problem} setSuccess={setSuccess} setSolved={setSolved}/>
-        {success && <Confetti gravity={0.3} tweenDuration={4000} width={width - 1} height={height - 1}/>}
-      </div>
 
+      <div className="bg-dark-fill-2 relative">
+        <Playground
+          problem={problem}
+          setSuccess={setSuccess}
+          setSolved={setSolved}
+        />
+
+        {success && (
+          <Confetti
+            gravity={0.3}
+            tweenDuration={4000}
+            width={width}
+            height={height}
+          />
+        )}
+      </div>
     </Split>
   );
-}
+};
+
+export default Workspace;
 
 // import { useState } from "react";
 // import Split from "react-split";

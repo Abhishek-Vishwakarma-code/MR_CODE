@@ -1,14 +1,29 @@
-import { auth, firestore } from "@/firebase/firebase";
+"use client";
+
 import { DBProblem, Problem } from "@/utils/types/problem";
-import { arrayRemove, arrayUnion, doc, getDoc, runTransaction, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  runTransaction,
+  updateDoc,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { AiFillLike, AiFillDislike, AiOutlineLoading3Quarters, AiFillStar } from "react-icons/ai";
+import {
+  AiFillLike,
+  AiFillDislike,
+  AiOutlineLoading3Quarters,
+  AiFillStar,
+} from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
 import { toast } from "react-toastify";
 import RectangleSkeleton from "../../Skeletons/RectangleSkeleton";
 import CircleSkeleton from "../../Skeletons/CircleSkeleton";
+import { auth, firestore } from "@/firebase/firebase";
+
 
 type ProblemDescriptionProps = {
 	problem: Problem;

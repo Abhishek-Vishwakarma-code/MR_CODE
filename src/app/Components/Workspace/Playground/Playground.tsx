@@ -146,178 +146,402 @@
 // };
 
 // export default Playground;
-import React, { useEffect, useState } from 'react';
-import PreferenceNav from './PreferenceNav/PreferenceNav';
-import Split from 'react-split';
-import CodeMirror from '@uiw/react-codemirror';
-import { vscodeDark } from '@uiw/codemirror-theme-vscode';
-import { javascript } from '@codemirror/lang-javascript';
-import EditorFooter from './EditorFooter';
-import { Problem } from '@/utils/types/problem';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth, firestore } from '@/firebase/firebase';
-import { toast } from 'react-toastify';
-import { pid } from 'process';
-import { useRouter } from 'next/router';
-import { problems } from '@/mockProblems/problems';
-import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
-import useLocalStorage from '@/hooks/useLocalStorage';
+// import React, { useEffect, useState } from 'react';
+// import PreferenceNav from './PreferenceNav/PreferenceNav';
+// import Split from 'react-split';
+// import CodeMirror from '@uiw/react-codemirror';
+// import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+// import { javascript } from '@codemirror/lang-javascript';
+// import EditorFooter from './EditorFooter';
+// import { Problem } from '@/utils/types/problem';
+// import { useAuthState } from 'react-firebase-hooks/auth';
+// import { auth, firestore } from '@/firebase/firebase';
+// import { toast } from 'react-toastify';
+// import { pid } from 'process';
+// import { useRouter } from 'next/router';
+// import { problems } from '@/mockProblems/problems';
+// import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+// import useLocalStorage from '@/hooks/useLocalStorage';
+
+// type PlaygroundProps = {
+//   problem: Problem;
+//   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+//   setSolved: React.Dispatch<React.SetStateAction<boolean>>;
+// };
+// export interface ISettings {
+//   fontSize: string,
+//   settingsModalIsOpen: boolean,
+//   dropdownIsOpen: boolean,
+// }
+// const Playground: React.FC<PlaygroundProps> = ({ problem,setSuccess,setSolved }) => {
+//   const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
+//   const [userCode,setUserCode] = useState<string>(problem.starterCode);
+//   const [fontSize,setfontSize] = useLocalStorage("MR.C-fontSize","16px");
+//   const [Settings,setSettings] = useState<ISettings>({
+//     fontSize: fontSize,
+//     settingsModalIsOpen: false,
+//     dropdownIsOpen: false,
+//   });
+  
+//   const [user] = useAuthState(auth);
+//   const {query: {pid}} = useRouter();
+//   const handleSubmit = async () => {
+//     if(!user) {
+//       toast.error("Please login to submit your code",{
+//         position:"top-center",
+//         autoClose:3000,
+//         theme:"dark"
+//       })
+//       return
+//   }
+//   try{
+//     userCode = userCode.slice(userCode.indexOf(problem.starterCode));
+//     const cb = new Function(`return ${userCode}`)();
+//     const handler = problems[pid as string].handlerFunction;
+//     if(typeof handler === "function"){
+//       const success = handler(cb);
+//     }
+//     if(success){
+//       toast.success("Congrants! All tests passed!",{
+//         position:"top-center",
+//         autoClose:3000,
+//         theme:"dark"
+//       });
+//       setSuccess(true);
+//       setTimeout(() => {
+//         setSuccess(false);
+//       },4000);
+//       const userRef = doc(firestore,"users",user.uid);
+//       await updateDoc(userRef,{ 
+//         solvedProblems: arrayUnion(pid),
+//       });
+//       setSolved(true);
+//     } 
+//   }catch(error: any){
+//     console.log(error.message);
+//     if(error.message.startswith("Error: AssertionError [ERR ASSERTION: Expected values to be strictly deep-equal:"))
+//     {
+//       toast.error("Oops! One or more test cases failed",{
+//         position:"top-center",
+//         autoClose:3000,
+//         theme:"dark",
+//       })
+//     }else{
+//       toast.error(error.message,{
+//         position:"top-center",
+//         autoClose:3000,
+//         theme:"dark",
+//       });
+//     }
+//   }
+//   }
+//   useEffect(() => {
+//     const code = localStorage.getItem(`code-${pid}`);
+//     if(user){
+//       setUserCode(code ? JSON.parse(code) : problem.starterCode);
+//     }
+//     else{ 
+//       setUserCode(problem.starterCode);
+//     }
+//   },[pid,user,problem.starterCode])
+//   const onchange = (value: string) => {
+//     setUserCode(value);
+//     localStorage.setItem(`code-${pid}`,JSON.stringify(value));
+//   };
+//   return (
+//     <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
+//       <PreferenceNav settings={Settings} setSettings={setSettings}/>
+//       <Split
+//         className="h-[calc(100vh-94px)]"
+//         direction="vertical"
+//         sizes={[60, 40]}
+//         minSize={60}
+//       >
+//         {/* Upper section: Code Editor */}
+//         <div className="w-full overflow-auto">
+//           <CodeMirror
+//             value={userCode}
+//             theme={vscodeDark}
+//             onChange={onchange}
+//             extensions={[javascript({ jsx: true })]}
+//             style={{ fontSize: Settings.fontSize }}
+//           />
+//         </div>
+
+//         {/* Lower section: Test Cases */}
+//         <div className="w-full px-5 overflow-auto py-4 space-y-6">
+//           <div className="space-y-4">
+//             <div className="flex h-10 items-center space-x-6">
+//               <div className="relative flex flex-col justify-center cursor-pointer">
+//                 <div className="text-sm font-medium leading-5 text-white">TestCases</div>
+//                 <hr className="absolute bottom-0 left-0 h-0.5 w-full rounded-full border-none bg-white" />
+//               </div>
+//             </div>
+
+//             {/* Test Case Selection Buttons */}
+//             <div className="flex items-center space-x-2">
+//               {problem.examples.map((example, index) => (
+//                 <div 
+//                   key={example.id}
+//                   onClick={() => setActiveTestCaseId(index)}
+//                   className="mr-2 items-start mt-2 text-white"
+//                 >
+//                   <div className="flex flex-wrap items-center gap-y-4">
+//                     <div className={`font-medium items-center transition-all focus:outline-none inline-flex bg-dark-fill-3
+//                     hover:bg-dark-fill-2 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap
+//                     ${activeTestCaseId === index ? "text-white" : "text-gray-500"}`}>
+//                       case {index + 1}
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+
+//             {/* Input/Output Display Section */}
+//             <div className="font-semibold space-y-3">
+//               <p className="text-sm font-medium text-white">Input:</p>
+//               <div className="w-full cursor-text rounded-lg border px-3 py-2.5 bg-dark-fill-3 border-transparent text-white">
+//                 {problem.examples[activeTestCaseId].inputText}
+//               </div>
+//               <p className="text-sm font-medium text-white">Output:</p>
+//               <div className="w-full cursor-text rounded-lg border px-3 py-2.5 bg-dark-fill-3 border-transparent text-white">
+//                 {problem.examples[activeTestCaseId].outputText}
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </Split>
+//       <EditorFooter handleSubmit={handleSubmit}  />
+//     </div>
+//   );
+// };
+
+// export default Playground;
+
+// function setSuccess(arg: boolean) {
+//   throw new Error('Function not implemented.');
+// }
+"use client";
+
+import React, { useEffect, useState, useCallback } from "react";
+import dynamic from "next/dynamic";
+import PreferenceNav from "./PreferenceNav/PreferenceNav";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { javascript } from "@codemirror/lang-javascript";
+import EditorFooter from "./EditorFooter";
+import { Problem } from "@/utils/types/problem";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, firestore } from "@/firebase/firebase";
+import { toast } from "react-toastify";
+import { problems } from "@/mockProblems/problems";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { useParams } from "next/navigation";
+
+// IMPORTANT: react-split must be dynamic in App Router
+const Split = dynamic(() => import("react-split"), { ssr: false });
 
 type PlaygroundProps = {
   problem: Problem;
   setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setSolved: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 export interface ISettings {
-  fontSize: string,
-  settingsModalIsOpen: boolean,
-  dropdownIsOpen: boolean,
+  fontSize: string;
+  settingsModalIsOpen: boolean;
+  dropdownIsOpen: boolean;
 }
-const Playground: React.FC<PlaygroundProps> = ({ problem,setSuccess,setSolved }) => {
-  const [activeTestCaseId, setActiveTestCaseId] = useState<number>(0);
-  const [userCode,setUserCode] = useState<string>(problem.starterCode);
-  const [fontSize,setfontSize] = useLocalStorage("MR.C-fontSize","16px");
-  const [Settings,setSettings] = useState<ISettings>({
-    fontSize: fontSize,
+
+const Playground: React.FC<PlaygroundProps> = ({
+  problem,
+  setSuccess,
+  setSolved,
+}) => {
+  const { pid } = useParams<{ pid: string }>();
+  const [user] = useAuthState(auth);
+
+  const [activeTestCaseId, setActiveTestCaseId] = useState(0);
+  const [userCode, setUserCode] = useState(problem.starterCode);
+
+  const [fontSize] = useLocalStorage("MR.C-fontSize", "16px");
+  const [settings, setSettings] = useState<ISettings>({
+    fontSize,
     settingsModalIsOpen: false,
     dropdownIsOpen: false,
   });
-  
-  const [user] = useAuthState(auth);
-  const {query: {pid}} = useRouter();
-  const handleSubmit = async () => {
-    if(!user) {
-      toast.error("Please login to submit your code",{
-        position:"top-center",
-        autoClose:3000,
-        theme:"dark"
-      })
-      return
-  }
-  try{
-    userCode = userCode.slice(userCode.indexOf(problem.starterCode));
-    const cb = new Function(`return ${userCode}`)();
-    const handler = problems[pid as string].handlerFunction;
-    if(typeof handler === "function"){
-      const success = handler(cb);
-    }
-    if(success){
-      toast.success("Congrants! All tests passed!",{
-        position:"top-center",
-        autoClose:3000,
-        theme:"dark"
-      });
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      },4000);
-      const userRef = doc(firestore,"users",user.uid);
-      await updateDoc(userRef,{ 
-        solvedProblems: arrayUnion(pid),
-      });
-      setSolved(true);
-    } 
-  }catch(error: any){
-    console.log(error.message);
-    if(error.message.startswith("Error: AssertionError [ERR ASSERTION: Expected values to be strictly deep-equal:"))
-    {
-      toast.error("Oops! One or more test cases failed",{
-        position:"top-center",
-        autoClose:3000,
-        theme:"dark",
-      })
-    }else{
-      toast.error(error.message,{
-        position:"top-center",
-        autoClose:3000,
-        theme:"dark",
-      });
-    }
-  }
-  }
+
+  /* ---------------- Code Editor Change ---------------- */
+  const onChange = useCallback(
+    (value: string) => {
+      setUserCode(value);
+      if (pid) {
+        localStorage.setItem(`code-${pid}`, JSON.stringify(value));
+      }
+    },
+    [pid]
+  );
+
+  /* ---------------- Load Saved Code ---------------- */
   useEffect(() => {
-    const code = localStorage.getItem(`code-${pid}`);
-    if(user){
-      setUserCode(code ? JSON.parse(code) : problem.starterCode);
+    if (!pid) return;
+    const saved = localStorage.getItem(`code-${pid}`);
+    setUserCode(saved ? JSON.parse(saved) : problem.starterCode);
+  }, [pid, problem.starterCode]);
+
+  /* ---------------- Sync Font Size ---------------- */
+  useEffect(() => {
+    setSettings((prev) => ({ ...prev, fontSize }));
+  }, [fontSize]);
+
+  /* ---------------- Submit Handler ---------------- */
+  const handleSubmit = async () => {
+    if (!user) {
+      toast.error("Please login to submit your code", {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
+      return;
     }
-    else{ 
-      setUserCode(problem.starterCode);
+
+    if (!pid || !problems[pid]) {
+      toast.error("Invalid problem ID");
+      return;
     }
-  },[pid,user,problem.starterCode])
-  const onchange = (value: string) => {
-    setUserCode(value);
-    localStorage.setItem(`code-${pid}`,JSON.stringify(value));
+
+    const starterIndex = userCode.indexOf(problem.starterCode);
+    if (starterIndex === -1) {
+      toast.error("Do not remove the starter code", {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
+      return;
+    }
+
+    const solutionCode = userCode.slice(starterIndex);
+
+    let userFn: Function;
+    try {
+      userFn = new Function(`return ${solutionCode}`)();
+    } catch {
+      toast.error("Compilation error in your code", {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
+      return;
+    }
+
+    try {
+      const handler = problems[pid].handlerFunction;
+      const success = typeof handler === "function" && handler(userFn);
+
+      if (success) {
+        toast.success("Congratulations! All tests passed!", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 4000);
+
+        const userRef = doc(firestore, "users", user.uid);
+        await updateDoc(userRef, {
+          solvedProblems: arrayUnion(pid),
+        });
+
+        setSolved(true);
+      }
+    } catch (error: any) {
+      if (
+        error.message?.startsWith("Error: AssertionError")
+      ) {
+        toast.error("Oops! One or more test cases failed", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      } else {
+        toast.error(error.message || "Runtime error", {
+          position: "top-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      }
+    }
   };
+
+  /* ---------------- UI ---------------- */
   return (
-    <div className="flex flex-col bg-dark-layer-1 relative overflow-x-hidden">
-      <PreferenceNav Settings={Settings} setSettings={setSettings}/>
+    <div className="flex flex-col bg-dark-layer-1 relative h-full overflow-hidden">
+
+      <PreferenceNav settings={settings} setSettings={setSettings} />
+
       <Split
         className="h-[calc(100vh-94px)]"
         direction="vertical"
         sizes={[60, 40]}
         minSize={60}
       >
-        {/* Upper section: Code Editor */}
+        {/* Code Editor */}
         <div className="w-full overflow-auto">
           <CodeMirror
             value={userCode}
             theme={vscodeDark}
-            onChange={onchange}
+            onChange={onChange}
             extensions={[javascript({ jsx: true })]}
-            style={{ fontSize: Settings.fontSize }}
+            style={{ fontSize: settings.fontSize }}
           />
         </div>
 
-        {/* Lower section: Test Cases */}
+        {/* Test Cases */}
         <div className="w-full px-5 overflow-auto py-4 space-y-6">
           <div className="space-y-4">
             <div className="flex h-10 items-center space-x-6">
               <div className="relative flex flex-col justify-center cursor-pointer">
-                <div className="text-sm font-medium leading-5 text-white">TestCases</div>
-                <hr className="absolute bottom-0 left-0 h-0.5 w-full rounded-full border-none bg-white" />
+                <div className="text-sm font-medium text-white">TestCases</div>
+                <hr className="absolute bottom-0 left-0 h-0.5 w-full bg-white" />
               </div>
             </div>
 
-            {/* Test Case Selection Buttons */}
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap gap-2">
               {problem.examples.map((example, index) => (
-                <div 
+                <div
                   key={example.id}
                   onClick={() => setActiveTestCaseId(index)}
-                  className="mr-2 items-start mt-2 text-white"
+                  className={`px-4 py-1 rounded-lg cursor-pointer transition-all ${
+                    activeTestCaseId === index
+                      ? "text-white bg-dark-fill-3"
+                      : "text-gray-500 bg-dark-fill-2"
+                  }`}
                 >
-                  <div className="flex flex-wrap items-center gap-y-4">
-                    <div className={`font-medium items-center transition-all focus:outline-none inline-flex bg-dark-fill-3
-                    hover:bg-dark-fill-2 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap
-                    ${activeTestCaseId === index ? "text-white" : "text-gray-500"}`}>
-                      case {index + 1}
-                    </div>
-                  </div>
+                  case {index + 1}
                 </div>
               ))}
             </div>
 
-            {/* Input/Output Display Section */}
-            <div className="font-semibold space-y-3">
-              <p className="text-sm font-medium text-white">Input:</p>
-              <div className="w-full cursor-text rounded-lg border px-3 py-2.5 bg-dark-fill-3 border-transparent text-white">
-                {problem.examples[activeTestCaseId].inputText}
+            <div className="space-y-3 text-white">
+              <p>Input:</p>
+              <div className="bg-dark-fill-3 p-2 rounded">
+                {problem.examples[activeTestCaseId]?.inputText}
               </div>
-              <p className="text-sm font-medium text-white">Output:</p>
-              <div className="w-full cursor-text rounded-lg border px-3 py-2.5 bg-dark-fill-3 border-transparent text-white">
-                {problem.examples[activeTestCaseId].outputText}
+
+              <p>Output:</p>
+              <div className="bg-dark-fill-3 p-2 rounded">
+                {problem.examples[activeTestCaseId]?.outputText}
               </div>
             </div>
           </div>
         </div>
       </Split>
-      <EditorFooter handleSubmit={handleSubmit}  />
+
+      <EditorFooter handleSubmit={handleSubmit} />
     </div>
   );
 };
 
 export default Playground;
-
-function setSuccess(arg: boolean) {
-  throw new Error('Function not implemented.');
-}

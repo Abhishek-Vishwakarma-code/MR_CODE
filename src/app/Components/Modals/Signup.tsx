@@ -51,7 +51,7 @@ const Signup: React.FC<SignupProps> = () => {
       solvedProblems:[],
       starredProblems:[],
       }
-      await setDoc(doc(firestore,"users",newUser.user.uid), userData)
+      await setDoc(doc(firestore,"users",newUser.user.uid), userData);
       router.push("/");
     } catch (error: any) {
       toast.error(error.message,{position:"top-center"});

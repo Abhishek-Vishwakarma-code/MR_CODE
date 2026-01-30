@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
   const openModal = useAuthModal((state) => state.openModal);
 
   return (
-    <nav>
+    <nav className="realtive z-1000 pointer-events-auto">
       <div className="flex items-center justify-between sm:px-12 px-2 md:px-24">
         <Link href="/" className="flex items-center justify-center h-20">
           <img src="/logo.png" alt="Mr. Code" height={200} width={200} className="mt-10" />

@@ -2,20 +2,20 @@
 
 import { DBProblem, Problem } from "@/utils/types/problem";
 import {
-  arrayRemove,
-  arrayUnion,
-  doc,
-  getDoc,
-  runTransaction,
-  updateDoc,
+	arrayRemove,
+	arrayUnion,
+	doc,
+	getDoc,
+	runTransaction,
+	updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
-  AiFillLike,
-  AiFillDislike,
-  AiOutlineLoading3Quarters,
-  AiFillStar,
+	AiFillLike,
+	AiFillDislike,
+	AiOutlineLoading3Quarters,
+	AiFillStar,
 } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { TiStarOutline } from "react-icons/ti";
@@ -299,8 +299,8 @@ function useGetCurrentProblem(problemId: string) {
 					problem.difficulty === "Easy"
 						? "bg-olive text-olive"
 						: problem.difficulty === "Medium"
-						? "bg-dark-yellow text-dark-yellow"
-						: " bg-dark-pink text-dark-pink"
+							? "bg-dark-yellow text-dark-yellow"
+							: " bg-dark-pink text-dark-pink"
 				);
 			}
 			setLoading(false);

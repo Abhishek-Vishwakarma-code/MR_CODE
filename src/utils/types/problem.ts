@@ -10,17 +10,6 @@ export type Example = {
 	img?: string;
 
 };
-
-// export type Problem = {
-// 	id: string;
-// 	title: string;
-// 	difficulty: string;
-// 	category: string;
-// 	order: number;
-// 	starterCode: string;
-// 	starterFunctionName: string;
-// 	examples: Example[];
-// };
 export type Problem = {
   id: string;
   title: string;

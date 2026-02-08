@@ -1,22 +1,13 @@
-// import { Problem } from "../types/problem";
-// import { twoSum } from "./two-sum";
-// import { jumpGame } from "./jump-games";
-// import { reverseLinkedList } from "./reverse-linked-list";
-// import { search2DMatrix } from "./search-a-2d-matrix";
-// import { validParentheses } from "./valid-paranthesis";
-
-// export const problems: Record<string, Problem> = {
-// 	[twoSum.id]: twoSum,
-// 	[jumpGame.id]: jumpGame,
-// 	[reverseLinkedList.id]: reverseLinkedList,
-// 	[search2DMatrix.id]: search2DMatrix,
-// 	[validParentheses.id]: validParentheses,
-// };
 import { twoSum } from "./two-sum";
 import { jumpGame } from "./jump-games";
 import { reverseLinkedList } from "./reverse-linked-list";
 import { search2DMatrix } from "./search-a-2d-matrix";
 import { validParentheses } from "./valid-paranthesis";
+import { subsets } from "./subsets";
+import { mergeIntervals } from "./merge-intervals";
+import { maximumDepthOfBinaryTree } from "./maximum-depth-of-binary-tree";
+import { bestTimeToBuyAndSellStock } from "./best-time-to-buy-and-sell-stock";
+import { containerWithMostWater } from "./container-with-most-water";
 
 export const problems: Record<string, any> = {
   "two-sum": twoSum,
@@ -24,4 +15,9 @@ export const problems: Record<string, any> = {
   "reverse-linked-list": reverseLinkedList,
   "search-a-2d-matrix": search2DMatrix,
   "valid-parentheses": validParentheses,
-};
+  "container-with-most-water": containerWithMostWater,
+  "best-time-to-buy-and-sell-stock": bestTimeToBuyAndSellStock,
+  "maximum-depth-of-binary-tree": maximumDepthOfBinaryTree,
+  "merge-intervals": mergeIntervals,
+  "subsets": subsets,
+}

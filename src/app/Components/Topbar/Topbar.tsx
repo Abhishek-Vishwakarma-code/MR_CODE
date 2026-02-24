@@ -1,140 +1,3 @@
-// "use client";
-
-// import React from "react";
-// import Link from "next/link";
-// import { useRouter, useParams } from "next/navigation";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-// import { BsList } from "react-icons/bs";
-// import { auth } from "@/firebase/firebase";
-// import Logout from "../Buttons/Logout";
-// import Timer from "../Timer/Timer";
-// import { useAuthModal } from "@/store/useAuthModal";
-// import { problems } from "@/utils/problems";
-// import { Problem } from "@/mockProblems/problems";
-
-// type TopbarProps = {
-//   problemPage?: boolean;
-// };
-
-// const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
-//   const [user] = useAuthState(auth);
-//   const openModal = useAuthModal((state) => state.openModal);
-
-//   const router = useRouter();
-//   const params = useParams();
-//   const pid = params?.pid as string;
-
-//   const handleProblemChange = (isForward: boolean) => {
-//     if (!pid) return;
-
-//     const { order } = problems[pid] as unknown as  Problem;
-//     const direction = isForward ? 1 : -1;
-//     const nextOrder = order + direction;
-
-//     const nextProblemKey = Object.keys(problems).find(
-//       (key) => problems[key].order === nextOrder
-//     );
-
-//     if (isForward && !nextProblemKey) {
-//       const firstProblemKey = Object.keys(problems).find(
-//         (key) => problems[key].order === 1
-//       );
-//       router.push(`/problems/${firstProblemKey}`);
-//     } 
-//     else if (!isForward && !nextProblemKey) {
-//       const lastProblemKey = Object.keys(problems).find(
-//         (key) => problems[key].order === Object.keys(problems).length
-//       );
-//       router.push(`/problems/${lastProblemKey}`);
-//     } 
-//     else {
-//       router.push(`/problems/${nextProblemKey}`);
-//     }
-//   };
-
-//   return (
-//     <nav className="relative flex h-[50px] w-full items-center px-5 bg-dark-layer-1 text-dark-gray-7">
-//       <div
-//         className={`flex w-full items-center justify-between ${
-//           problemPage ? "max-w-[1200px] mx-auto" : ""
-//         }`}
-//       >
-//         {/* Logo */}
-//         <Link href="/" className="h-[220px] flex-1 mt-5">
-//           <img src="/logo-full.png" alt="Logo" className="h-full" />
-//         </Link>
-
-//         {/* Problem Navigation */}
-//         {problemPage && (
-//           <div className="flex items-center gap-4 flex-1 justify-center">
-//             <div
-//               className="flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer"
-//               onClick={() => handleProblemChange(false)}
-//             >
-//               <FaChevronLeft />
-//             </div>
-
-//             <Link
-//               href="/"
-//               className="flex items-center gap-2 font-medium max-w-[170px] text-dark-gray-8"
-//             >
-//               <BsList />
-//               <p>Problem List</p>
-//             </Link>
-
-//             <div
-//               className="flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer"
-//               onClick={() => handleProblemChange(true)}
-//             >
-//               <FaChevronRight />
-//             </div>
-//           </div>
-//         )}
-
-//         {/* Right Section */}
-//         <div className="flex items-center space-x-4 flex-1 justify-end">
-//           <a
-//             href="https://www.buymeacoffee.com/burakorkmezz"
-//             target="_blank"
-//             rel="noreferrer"
-//             className="bg-dark-fill-3 py-1.5 px-3 rounded text-brand-orange hover:bg-dark-fill-2"
-//           >
-//             Premium
-//           </a>
-
-//           {!user && (
-//             <button
-//               onClick={() => openModal("login")}
-//               className="bg-dark-fill-3 py-1 px-2 rounded"
-//             >
-//               Sign In
-//             </button>
-//           )}
-
-//           {problemPage && <Timer />}
-
-//           {user && (
-//             <div className="relative group cursor-pointer">
-//               <img
-//                 src="/avatar.png"
-//                 alt="profile"
-//                 className="h-8 w-8 rounded-full"
-//               />
-//               <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-dark-layer-1 text-brand-orange p-2 rounded shadow-lg scale-0 group-hover:scale-100 transition-all">
-//                 <p className="text-sm">{user.email}</p>
-//               </div>
-//             </div>
-//           )}
-
-//           {user && <Logout />}
-//         </div>
-//       </div>
-//     </nav>
-//   );
-// };
-
-// export default Topbar;
 "use client";
 
 import React from "react";
@@ -156,16 +19,16 @@ type TopbarProps = {
 
 const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
   const [user] = useAuthState(auth);
-  const openModal = useAuthModal((s) => s.openModal);
+  const openModal = useAuthModal((state) => state.openModal);
+
   const router = useRouter();
   const params = useParams();
   const pid = params?.pid as string;
 
-  /* ---------------- Problem Navigation ---------------- */
   const handleProblemChange = (isForward: boolean) => {
     if (!pid) return;
 
-    const { order } = problems[pid] as unknown as Problem;
+    const { order } = problems[pid] as unknown as  Problem;
     const direction = isForward ? 1 : -1;
     const nextOrder = order + direction;
 
@@ -173,65 +36,97 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
       (key) => problems[key].order === nextOrder
     );
 
-    if (nextProblemKey) {
+    if (isForward && !nextProblemKey) {
+      const firstProblemKey = Object.keys(problems).find(
+        (key) => problems[key].order === 1
+      );
+      router.push(`/problems/${firstProblemKey}`);
+    } 
+    else if (!isForward && !nextProblemKey) {
+      const lastProblemKey = Object.keys(problems).find(
+        (key) => problems[key].order === Object.keys(problems).length
+      );
+      router.push(`/problems/${lastProblemKey}`);
+    } 
+    else {
       router.push(`/problems/${nextProblemKey}`);
     }
   };
 
-  /* ---------------- AUTH NAVIGATION (FIXED) ---------------- */
-  const handleLogin = () => {
-    router.push("/auth");   // ✅ real route exists
-    openModal("login");     // ✅ Zustand modal opens
-  };
-
   return (
-    <nav className="relative z-50 h-[50px] w-full bg-dark-layer-1 px-5">
-      <div className="flex h-full w-full items-center justify-between max-w-[1200px] mx-auto">
-
+    <nav className="relative flex h-[50px] w-full items-center px-5 bg-dark-layer-1 text-dark-gray-7">
+      <div
+        className={`flex w-full items-center justify-between ${
+          problemPage ? "max-w-[1200px] mx-auto" : ""
+        }`}
+      >
         {/* Logo */}
-        <Link href="/" className="flex items-center h-10 shrink-0">
-          <img src="/logo-full.png" alt="Logo" className="h-100 w-100 mt-10"/>
+        <Link href="/" className="h-[220px] flex-1 mt-5">
+          <img src="/logo-full.png" alt="Logo" className="h-full" />
         </Link>
 
         {/* Problem Navigation */}
         {problemPage && (
-          <div className="flex items-center gap-4">
-            <button onClick={() => handleProblemChange(false)}>
+          <div className="flex items-center gap-4 flex-1 justify-center">
+            <div
+              className="flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer"
+              onClick={() => handleProblemChange(false)}
+            >
               <FaChevronLeft />
-            </button>
+            </div>
 
-            <Link href="/" className="flex items-center gap-2">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-medium max-w-[170px] text-dark-gray-8"
+            >
               <BsList />
-              <span>Problem List</span>
+              <p>Problem List</p>
             </Link>
 
-            <button onClick={() => handleProblemChange(true)}>
+            <div
+              className="flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer"
+              onClick={() => handleProblemChange(true)}
+            >
               <FaChevronRight />
-            </button>
+            </div>
           </div>
         )}
 
         {/* Right Section */}
-        <div className="flex items-center gap-5 shrink-0">
+        <div className="flex items-center space-x-4 flex-1 justify-end">
           <a
             href="https://www.buymeacoffee.com/burakorkmezz"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded bg-dark-fill-3 px-3 py-1.5 text-brand-orange hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+            className="bg-dark-fill-3 py-1.5 px-3 rounded text-brand-orange hover:bg-dark-fill-2"
           >
             Premium
           </a>
 
           {!user && (
             <button
-              onClick={handleLogin}
-              className="inline-flex rounded bg-brand-orange px-3 py-1.5 text-white hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+              onClick={() => openModal("login")}
+              className="bg-dark-fill-3 py-1 px-2 rounded"
             >
               Sign In
             </button>
           )}
 
           {problemPage && <Timer />}
+
+          {user && (
+            <div className="relative group cursor-pointer">
+              <img
+                src="/avatar.png"
+                alt="profile"
+                className="h-8 w-8 rounded-full"
+              />
+              <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-dark-layer-1 text-brand-orange p-2 rounded shadow-lg scale-0 group-hover:scale-100 transition-all">
+                <p className="text-sm">{user.email}</p>
+              </div>
+            </div>
+          )}
+
           {user && <Logout />}
         </div>
       </div>
@@ -240,3 +135,108 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
 };
 
 export default Topbar;
+// "use client";
+
+// import React from "react";
+// import Link from "next/link";
+// import { useRouter, useParams } from "next/navigation";
+// import { useAuthState } from "react-firebase-hooks/auth";
+// import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+// import { BsList } from "react-icons/bs";
+// import { auth } from "@/firebase/firebase";
+// import Logout from "../Buttons/Logout";
+// import Timer from "../Timer/Timer";
+// import { useAuthModal } from "@/store/useAuthModal";
+// import { problems } from "@/utils/problems";
+// import { Problem } from "@/mockProblems/problems";
+
+// type TopbarProps = {
+//   problemPage?: boolean;
+// };
+
+// const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
+//   const [user] = useAuthState(auth);
+//   const openModal = useAuthModal((s) => s.openModal);
+//   const router = useRouter();
+//   const params = useParams();
+//   const pid = params?.pid as string;
+
+//   /* ---------------- Problem Navigation ---------------- */
+//   const handleProblemChange = (isForward: boolean) => {
+//     if (!pid) return;
+
+//     const { order } = problems[pid] as unknown as Problem;
+//     const direction = isForward ? 1 : -1;
+//     const nextOrder = order + direction;
+
+//     const nextProblemKey = Object.keys(problems).find(
+//       (key) => problems[key].order === nextOrder
+//     );
+
+//     if (nextProblemKey) {
+//       router.push(`/problems/${nextProblemKey}`);
+//     }
+//   };
+
+//   /* ---------------- AUTH NAVIGATION (FIXED) ---------------- */
+//   const handleLogin = () => {
+//     router.push("/auth");   // ✅ real route exists
+//     openModal("login");     // ✅ Zustand modal opens
+//   };
+
+//   return (
+//     <nav className="relative z-50 h-[50px] w-full bg-dark-layer-1 px-5">
+//       <div className="flex h-full w-full items-center justify-between max-w-[1200px] mx-auto">
+
+//         {/* Logo */}
+//         <Link href="/" className="flex items-center h-10 shrink-0">
+//           <img src="/logo-full.png" alt="Logo" className="h-100 w-100 mt-10"/>
+//         </Link>
+
+//         {/* Problem Navigation */}
+//         {problemPage && (
+//           <div className="flex items-center gap-4">
+//             <button onClick={() => handleProblemChange(false)}>
+//               <FaChevronLeft />
+//             </button>
+
+//             <Link href="/" className="flex items-center gap-2">
+//               <BsList />
+//               <span>Problem List</span>
+//             </Link>
+
+//             <button onClick={() => handleProblemChange(true)}>
+//               <FaChevronRight />
+//             </button>
+//           </div>
+//         )}
+
+//         {/* Right Section */}
+//         <div className="flex items-center gap-5 shrink-0">
+//           <a
+//             href="https://www.buymeacoffee.com/burakorkmezz"
+//             target="_blank"
+//             rel="noreferrer"
+//             className="inline-flex rounded bg-dark-fill-3 px-3 py-1.5 text-brand-orange hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+//           >
+//             Premium
+//           </a>
+
+//           {!user && (
+//             <button
+//               onClick={handleLogin}
+//               className="inline-flex rounded bg-brand-orange px-3 py-1.5 text-white hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+//             >
+//               Sign In
+//             </button>
+//           )}
+
+//           {problemPage && <Timer />}
+//           {user && <Logout />}
+//         </div>
+//       </div>
+//     </nav>
+//   );
+// };
+
+// export default Topbar;

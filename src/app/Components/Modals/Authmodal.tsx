@@ -30,7 +30,7 @@ const AuthModal: React.FC = () => {
 
       {/* Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="relative w-full max-w-[450px] mx-6" >
+        <div className="relative w-full max-w-112.5 mx-6" >
           <div className="bg-white rounded-lg shadow bg-linear-to-b from-brand-orange to-slate-900">
             {/* Close button */}
             <div className="flex justify-end p-2">

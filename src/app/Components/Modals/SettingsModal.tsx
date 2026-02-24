@@ -29,7 +29,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ setSettings, settings }) 
                         <div className='fixed inset-0 bg-gray-8 opacity-60'></div>
                     </div>
 
-                    <div className='my-8 inline-block min-w-full transform rounded-[13px] text-left transition-all bg-overlay-3 md:min-w-[420px] shadow-level4 shadow-lg p-0 bg-dark-layer-1 w-[600px] overflow-visible! opacity-100 scale-100'>
+                    <div className='my-8 inline-block min-w-full transform rounded-[13px] text-left transition-all bg-overlay-3 md:min-w-105 shadow-level4 shadow-lg p-0 bg-dark-layer-1 w-150 overflow-visible! opacity-100 scale-100'>
                         {/* setting header */}
                         <div className='flex items-center border-b px-5 py-4 text-lg font-medium  border-dark-divider-border-2'>
                             Settings
@@ -43,13 +43,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ setSettings, settings }) 
 
                         <div className='px-6 pt-4 pb-6'>
                             <div className='mt-6 flex justify-between first:mt-0'>
-                                <div className='w-[340px]'>
+                                <div className='w-85'>
                                     <h3 className=' text-base font-medium'>Font size</h3>
                                     <h3 className='text-label-3  mt-1.5'>
                                         Choose your preferred font size for the code editor.
                                     </h3>
                                 </div>
-                                <div className='w-[170px]'>
+                                <div className='w-42.5'>
                                     <div className='relative'>
                                         <button
                                             onClick={handleClickDropdown}

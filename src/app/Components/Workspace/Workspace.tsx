@@ -21,7 +21,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ problem }) => {
   const [success, setSuccess] = useState(false);
   const [solved, setSolved] = useState(false);
 
-  return (
+return (
+  <>
     <Split className="flex h-screen" minSize={0}>
       <ProblemDescription problem={problem} _solved={solved} />
 
@@ -31,18 +32,26 @@ const Workspace: React.FC<WorkspaceProps> = ({ problem }) => {
           setSuccess={setSuccess}
           setSolved={setSolved}
         />
-
-        {success && (
-          <Confetti
-            gravity={0.3}
-            tweenDuration={4000}
-            width={width}
-            height={height}
-          />
-        )}
       </div>
     </Split>
-  );
+
+    {success && (
+      <Confetti
+        gravity={0.3}
+        tweenDuration={4000}
+        width={width}
+        height={height}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          zIndex: 9999,
+          pointerEvents: "none",
+        }}
+      />
+    )}
+  </>
+);
 };
 
 export default Workspace;

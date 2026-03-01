@@ -12,9 +12,8 @@ const Timer: React.FC<TimerProps> = () => {
 		const minutes = Math.floor((time % 3600) / 60);
 		const seconds = time % 60;
 
-		return `${hours < 10 ? "0" + hours : hours}:${minutes < 10 ? "0" + minutes : minutes}:${
-			seconds < 10 ? "0" + seconds : seconds
-		}`;
+		return `${hours < 10 ? "0" + hours : hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds
+			}`;
 	};
 
 	useEffect(() => {
@@ -32,7 +31,7 @@ const Timer: React.FC<TimerProps> = () => {
 	return (
 		<div>
 			{showTimer ? (
-				<div className='flex items-center space-x-2 bg-dark-fill-3 p-1.5 cursor-pointer rounded hover:bg-dark-fill-2'>
+				<div className='flex items-center space-x-2 bg-dark-fill-3 p-1.5 cursor-pointer rounded hover:bg-dark-fill-2 text-dark-gray-7'>
 					<div>{formatTime(time)}</div>
 					<FiRefreshCcw
 						onClick={() => {
@@ -43,7 +42,7 @@ const Timer: React.FC<TimerProps> = () => {
 				</div>
 			) : (
 				<div
-					className='flex items-center p-1 h-8 hover:bg-dark-fill-3 rounded cursor-pointer'
+					className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer text-dark-gray-7'
 					onClick={() => setShowTimer(true)}
 				>
 					<svg

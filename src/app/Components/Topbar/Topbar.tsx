@@ -350,22 +350,49 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
   const pid = params?.pid as string;
 
   /* ---------------- Problem Navigation ---------------- */
-  const handleProblemChange = (isForward: boolean) => {
-    if (!pid) return;
+  // const handleProblemChange = (isForward: boolean) => {
+  //   if (!pid) return;
 
-    const { order } = problems[pid] as unknown as Problem;
-    const direction = isForward ? 1 : -1;
-    const nextOrder = order + direction;
+  //   const { order } = problems[pid] as unknown as Problem;
+  //   const direction = isForward ? 1 : -1;
+  //   const nextOrder = order + direction;
 
-    const nextProblemKey = Object.keys(problems).find(
-      (key) => problems[key].order === nextOrder
-    );
+  //   const nextProblemKey = Object.keys(problems).find(
+  //     (key) => problems[key].order === nextOrder
+  //   );
 
-    if (nextProblemKey) {
-      router.push(`/problems/${nextProblemKey}`);
-    }
-  };
+  //   if (nextProblemKey) {
+  //     router.push(`/problems/${nextProblemKey}`);
+  //   }
+  // };
+const handleProblemChange = (isForward: boolean) => {
+  if (!pid) return;
 
+  const { order } = problems[pid] as unknown as Problem;
+  const direction = isForward ? 1 : -1;
+
+  const totalProblems = Object.keys(problems).length;
+
+  let nextOrder = order + direction;
+
+  // ✅ If forward and exceeds max → go to 1
+  if (nextOrder > totalProblems) {
+    nextOrder = 1;
+  }
+
+  // ✅ If backward and goes below 1 → go to last
+  if (nextOrder < 1) {
+    nextOrder = totalProblems;
+  }
+
+  const nextProblemKey = Object.keys(problems).find(
+    (key) => problems[key].order === nextOrder
+  );
+
+  if (nextProblemKey) {
+    router.push(`/problems/${nextProblemKey}`);
+  }
+};
   /* ---------------- AUTH NAVIGATION (WORKING) ---------------- */
   const handleLogin = () => {
     router.push("/auth");   // ✅ important for your setup
@@ -554,7 +581,8 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
             </button>
           )}
 
-          {problemPage && <Timer />}
+          {/* {problemPage && <Timer />} */}
+          {problemPage && user && <Timer />}
 
           {/* ✅ PROFILE + LOGOUT */}
           {user && (

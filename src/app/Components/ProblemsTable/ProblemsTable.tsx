@@ -502,7 +502,7 @@ const ProblemsTable: React.FC<ProblemsTableProps> = ({
               key={problem.id}
               className={`transition-colors duration-200 ${
                 idx % 2 === 1 ? "bg-dark-layer-1" : ""
-              } hover:bg-dark-layer-2`}
+              }`}
             >
               {/* STATUS */}
               <td className="px-2 py-4 text-center w-12">

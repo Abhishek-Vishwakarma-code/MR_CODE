@@ -19,31 +19,34 @@ const AuthModal: React.FC = () => {
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [closeModal]);
-  
+
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay with blur effect */}
       <div
-        className="fixed inset-0 bg-black/60 z-40"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
         onClick={closeModal}
       />
 
-      {/* Modal */}
-      <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="relative w-full max-w-112.5 mx-6" >
-          <div className="bg-white rounded-lg shadow bg-linear-to-b from-brand-orange to-slate-900">
-            {/* Close button */}
-            <div className="flex justify-end p-2">
+      {/* Modal Container */}
+      <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none px-4">
+        <div className="relative w-full max-w-md pointer-events-auto animate-modal-pop">
+
+          {/* Main Modal Body - Replaced old gradient with theme variables */}
+          <div className="bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-color)] shadow-2xl overflow-hidden transition-colors duration-300">
+
+            {/* Header / Close button */}
+            <div className="flex justify-end p-4 pb-0">
               <button
                 type="button"
-                className="bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white text-white"
+                className="bg-transparent rounded-lg p-2 text-[var(--text-muted)] hover:bg-[var(--bg-accent)] hover:text-[var(--text-primary)] transition-colors"
                 onClick={closeModal}
               >
-                <IoClose className="h-5 w-5" />
+                <IoClose className="h-6 w-6" />
               </button>
             </div>
 
-            {/* Auth forms */}
+            {/* Auth forms rendering */}
             {type === "login" ? (
               <Login />
             ) : type === "register" ? (
@@ -51,6 +54,7 @@ const AuthModal: React.FC = () => {
             ) : (
               <ResetPassword />
             )}
+
           </div>
         </div>
       </div>

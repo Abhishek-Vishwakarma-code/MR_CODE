@@ -7,30 +7,36 @@ type EditorFooterProps = {
 
 const EditorFooter: React.FC<EditorFooterProps> = ({ handleSubmit }) => {
   return (
-    <div className='flex bg-dark-layer-1 absolute bottom-0 z-0 w-full'>
-      <div className='mx-5 my-2.5 flex justify-between w-full'>
-        <div className='mr-2 flex flex-1 flex-nowrap items-center space-x-4'>
-          <button className='px-3 py-1.5 font-medium items-center transition-all inline-flex bg-dark-fill-3 text-sm hover:bg-dark-fill-2 text-dark-label-2 rounded-lg pl-3 pr-2'>
+    <div className="flex bg-[var(--bg-secondary)] border-t border-[var(--border-color)] absolute bottom-0 z-10 w-full transition-colors duration-300">
+      <div className="mx-4 sm:mx-5 my-2.5 flex justify-between w-full">
+        
+        {/* Left Side: Console Button */}
+        <div className="mr-2 flex flex-1 flex-nowrap items-center space-x-4">
+          <button className="group flex items-center px-4 py-1.5 text-sm font-medium bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg transition-all duration-200">
             Console
-            <div className='ml-1 transform transition flex items-center'>
-              <BsChevronUp className='fill-gray-6 mx-1 fill-dark-gray-6' />
+            <div className="ml-2 flex items-center transform transition-transform group-hover:-translate-y-0.5">
+              <BsChevronUp className="text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-colors" />
             </div>
           </button>
         </div>
-        <div className='ml-auto flex items-center space-x-4'>
+        
+        {/* Right Side: Run & Submit Buttons */}
+        <div className="ml-auto flex items-center space-x-3 sm:space-x-4">
           <button
-            className='px-3 py-1.5 text-sm font-medium items-center whitespace-nowrap transition-all focus:outline-none inline-flex bg-dark-fill-3 hover:bg-dark-fill-2 text-dark-label-2 rounded-lg'
+            className="px-4 py-1.5 text-sm font-medium whitespace-nowrap bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--border-color)] rounded-lg transition-all duration-200"
             onClick={handleSubmit}
           >
             Run
           </button>
+          
           <button
-            className='px-3 py-1.5 font-medium items-center transition-all focus:outline-none inline-flex text-sm text-white bg-dark-green-s hover:bg-green-3 rounded-lg'
+            className="px-5 py-1.5 text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg shadow-md shadow-emerald-500/20 active:scale-95 transition-all duration-200"
             onClick={handleSubmit}
           >
             Submit
           </button>
         </div>
+
       </div>
     </div>
   );

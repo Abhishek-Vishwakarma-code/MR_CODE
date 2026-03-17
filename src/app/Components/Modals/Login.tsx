@@ -20,11 +20,9 @@ const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!inputs.email || !inputs.password) {
       return alert("Please fill all the fields");
     }
-
     try {
       const newUser = await signInWithEmailAndPassword(
         inputs.email,
@@ -34,90 +32,91 @@ const Login: React.FC = () => {
       router.push("/");
     } catch (error: any) {
       toast.error(error.message, {
-    position: "top-center",
-    autoClose: 3000,
-    theme: "dark",
-  });
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
     }
   };
-useEffect(()=>{
-  if(error) toast.error(error.message, {
-    position: "top-center",
-    autoClose: 3000,
-    theme: "dark",
-  });
-},[error]);
+
+  useEffect(() => {
+    if (error)
+      toast.error(error.message, {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
+  }, [error]);
 
   return (
-    <form className="space-y-6 px-6 pb-4" onSubmit={handleLogin}>
-      <h3 className="text-xl font-medium text-white">Sign in to Mr. Code</h3>
+    <form className="space-y-6 px-6 sm:px-8 pb-8 pt-2" onSubmit={handleLogin}>
+      <h3 className="text-2xl font-bold text-[var(--text-primary)] text-center">
+        Welcome Back
+      </h3>
 
-      <div>
-        <label
-          htmlFor="email"
-          className="text-sm font-medium block mb-2 text-gray-300"
-        >
-          Your Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          onChange={handleInputChange}
-          className="border-2 outline-none sm:text-sm rounded-lg block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white"
-          placeholder="name@company.com"
-        />
+      <div className="space-y-4">
+        <div>
+          <label
+            htmlFor="email"
+            className="text-sm font-semibold block mb-2 text-[var(--text-secondary)]"
+          >
+            Email Address
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            onChange={handleInputChange}
+            className="w-full p-3 rounded-xl outline-none bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--brand-orange)] focus:ring-1 focus:ring-[var(--brand-orange)] transition-all shadow-sm"
+            placeholder="name@company.com"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="password"
+            className="text-sm font-semibold block mb-2 text-[var(--text-secondary)]"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            onChange={handleInputChange}
+            className="w-full p-3 rounded-xl outline-none bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--brand-orange)] focus:ring-1 focus:ring-[var(--brand-orange)] transition-all shadow-sm"
+            placeholder="********"
+          />
+        </div>
       </div>
 
-      <div>
-        <label
-          htmlFor="password"
-          className="text-sm font-medium block mb-2 text-gray-300"
+      <div className="flex w-full justify-end mt-2">
+        <button
+          type="button"
+          className="text-sm font-medium text-[var(--brand-orange)] hover:underline"
+          onClick={() => openModal("forgotPassword")}
         >
-          Your Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          onChange={handleInputChange}
-          className="border-2 outline-none sm:text-sm rounded-lg block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white"
-          placeholder="********"
-        />
+          Forgot Password?
+        </button>
       </div>
 
       <button
         type="submit"
-        className="w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-brand-orange hover:bg-brand-orange-s"
+        disabled={loading}
+        className="w-full py-3 rounded-xl bg-[var(--brand-orange)] text-white font-bold text-base shadow-md shadow-orange-500/20 hover:brightness-110 active:scale-95 transition-all duration-300 disabled:opacity-70 disabled:active:scale-100"
       >
-        { loading ? "Loading..." : "Log In"}
+        {loading ? "Signing in..." : "Sign In"}
       </button>
 
-      <div className="flex w-full justify-end mt-2">
-        <a
-          href="#"
-          className="text-sm text-brand-orange hover:underline"
-          onClick={(e) => {
-            e.preventDefault();
-            openModal("forgotPassword");
-          }}
+      <div className="text-sm font-medium text-[var(--text-muted)] text-center pt-2">
+        Not registered yet?{" "}
+        <button
+          type="button"
+          className="text-[var(--brand-orange)] hover:underline font-bold"
+          onClick={() => openModal("register")}
         >
-          Forgot Password?
-        </a>
-      </div>
-
-      <div className="text-sm font-medium text-gray-500">
-        Not Registered?{" "}
-        <a
-          href="#"
-          className="text-blue-700 hover:underline"
-          onClick={(e) => {
-            e.preventDefault();
-            openModal("register");
-          }}
-        >
-          Create account
-        </a>
+          Create an account
+        </button>
       </div>
     </form>
   );

@@ -1,11 +1,11 @@
-import React from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
-function useHasMounted() {
-    const [hasMounted,setHasMounted] = React.useState(false);
+export default function useHasMounted(): boolean {
+    const [hasMounted, setHasMounted] = useState(false);
+
     useEffect(() => {
         setHasMounted(true);
-    },[]);
+    }, []);
+
     return hasMounted;
 }
-export default useHasMounted;

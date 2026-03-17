@@ -1,3 +1,4 @@
+
 // "use client";
 
 // import React from "react";
@@ -9,6 +10,7 @@
 // import { auth } from "@/firebase/firebase";
 // import Logout from "../Buttons/Logout";
 // import Timer from "../Timer/Timer";
+// import ThemeToggle from "../ThemeToggle";
 // import { useAuthModal } from "@/store/useAuthModal";
 // import { problems } from "@/utils/problems";
 // import { Problem } from "@/mockProblems/problems";
@@ -30,133 +32,20 @@
 
 //     const { order } = problems[pid] as unknown as Problem;
 //     const direction = isForward ? 1 : -1;
-//     const nextOrder = order + direction;
 
-//     const nextProblemKey = Object.keys(problems).find(
-//       (key) => problems[key].order === nextOrder
-//     );
+//     const totalProblems = Object.keys(problems).length;
 
-//     if (nextProblemKey) {
-//       router.push(`/problems/${nextProblemKey}`);
+//     let nextOrder = order + direction;
+
+//     // ✅ If forward and exceeds max → go to 1
+//     if (nextOrder > totalProblems) {
+//       nextOrder = 1;
 //     }
-//   };
 
-//   /* ---------------- AUTH NAVIGATION (WORKING) ---------------- */
-//   const handleLogin = () => {
-//     router.push("/auth");   // ✅ important for your setup
-//     openModal("login");     // ✅ open modal
-//   };
-
-//   return (
-//     <nav className="relative z-50 h-[50px] w-full bg-dark-layer-1 px-5">
-//       <div className="flex h-full w-full items-center justify-between max-w-[1200px] mx-auto">
-
-//         {/* Logo */}
-//         <Link href="/" className="flex items-center h-10 shrink-0">
-//           {/* <img src="/gpt.png" alt="Logo" className="h-100 w-100 object-contain mt-30" /> */}
-
-//         </Link>
-
-//         {/* Problem Navigation */}
-//         {problemPage && (
-//           <div className="flex items-center gap-4">
-//             <button onClick={() => handleProblemChange(false)}>
-//               <FaChevronLeft />
-//             </button>
-
-//             <Link href="/" className="flex items-center gap-2">
-//               <BsList />
-//               <span>Problem List</span>
-//             </Link>
-
-//             <button onClick={() => handleProblemChange(true)}>
-//               <FaChevronRight />
-//             </button>
-//           </div>
-//         )}
-
-//         {/* Right Section */}
-//         <div className="flex items-center gap-5 shrink-0">
-
-//           <a
-//             href="https://www.buymeacoffee.com/burakorkmezz"
-//             target="_blank"
-//             rel="noreferrer"
-//             className="inline-flex rounded bg-dark-fill-3 px-3 py-1.5 text-brand-orange hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
-//           >
-//             Premium
-//           </a>
-
-//           {/* ✅ SIGN IN */}
-//           {!user && (
-//             <button
-//               onClick={handleLogin}
-//               className="inline-flex rounded bg-brand-orange px-3 py-1.5 text-white hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
-//             >
-//               Sign In
-//             </button>
-//           )}
-
-//           {problemPage && <Timer />}
-
-//           {/* ✅ PROFILE + LOGOUT */}
-//           {user && (
-//             <>
-//               <div className="relative group cursor-pointer">
-//                 <img
-//                   src="/avatar.png"
-//                   alt="profile"
-//                   className="h-8 w-8 rounded-full"
-//                 />
-
-//                 <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-dark-layer-1 text-brand-orange px-3 py-1 rounded shadow-lg scale-0 group-hover:scale-100 transition-all duration-200">
-//                   <p className="text-sm">{user.email}</p>
-//                 </div>
-//               </div>
-
-//               <Logout />
-//             </>
-//           )}
-//         </div>
-//       </div>
-//     </nav>
-//   );
-// };
-
-// export default Topbar;
-// "use client";
-
-// import React from "react";
-// import Link from "next/link";
-// import { useRouter, useParams } from "next/navigation";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-// import { BsList } from "react-icons/bs";
-// import { auth } from "@/firebase/firebase";
-// import Logout from "../Buttons/Logout";
-// import Timer from "../Timer/Timer";
-// import { useAuthModal } from "@/store/useAuthModal";
-// import { problems } from "@/utils/problems";
-// import { Problem } from "@/mockProblems/problems";
-
-// type TopbarProps = {
-//   problemPage?: boolean;
-// };
-
-// const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
-//   const [user] = useAuthState(auth);
-//   const openModal = useAuthModal((s) => s.openModal);
-//   const router = useRouter();
-//   const params = useParams();
-//   const pid = params?.pid as string;
-
-//   /* ---------------- Problem Navigation ---------------- */
-//   const handleProblemChange = (isForward: boolean) => {
-//     if (!pid) return;
-
-//     const { order } = problems[pid] as unknown as Problem;
-//     const direction = isForward ? 1 : -1;
-//     const nextOrder = order + direction;
+//     // ✅ If backward and goes below 1 → go to last
+//     if (nextOrder < 1) {
+//       nextOrder = totalProblems;
+//     }
 
 //     const nextProblemKey = Object.keys(problems).find(
 //       (key) => problems[key].order === nextOrder
@@ -169,152 +58,97 @@
 
 //   /* ---------------- AUTH NAVIGATION ---------------- */
 //   const handleLogin = () => {
-//     router.push("/auth");
-//     openModal("login");
+//     router.push("/auth");   // ✅ important for your setup
+//     openModal("login");     // ✅ open modal
 //   };
 
 //   return (
-//     <nav className="relative z-50 h-[60px] w-full bg-dark-layer-1 px-6 shadow-md">
-//       <div className="flex h-full w-full items-center justify-between max-w-[1200px] mx-auto">
+//     <nav className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/80 backdrop-blur-md px-4 py-3 sm:px-8">
+//       <div className="flex items-center justify-between max-w-7xl mx-auto h-full">
 
-//         {/* ---------------- Animated SVG Logo ---------------- */}
-//         <Link href="/" className="flex items-center shrink-0">
-//           <svg
-//             viewBox="0 0 650 160"
-//             fill="none"
-//             xmlns="http://www.w3.org/2000/svg"
-//             className="h-12 w-auto"
-//           >
-//             <defs>
-//               <filter id="orangeGlow" x="-50%" y="-50%" width="200%" height="200%">
-//                 <feGaussianBlur stdDeviation="5" result="blur" />
-//                 <feMerge>
-//                   <feMergeNode in="blur" />
-//                   <feMergeNode in="SourceGraphic" />
-//                 </feMerge>
-//               </filter>
-
-//               <style>
-//                 {`
-//                   .pulse {
-//                     animation: pulse 2.5s infinite ease-in-out;
-//                   }
-
-//                   @keyframes pulse {
-//                     0% { opacity: 0.7; }
-//                     50% { opacity: 1; }
-//                     100% { opacity: 0.7; }
-//                   }
-//                 `}
-//               </style>
-//             </defs>
-
-//             {/* Icon */}
-//             <g>
-//               <rect
-//                 x="30"
-//                 y="30"
-//                 width="80"
-//                 height="80"
-//                 rx="12"
-//                 stroke="#FF6A00"
-//                 strokeWidth="4"
-//                 fill="none"
-//               />
-
-//               <polygon
-//                 points="70,45 95,70 70,95 45,70"
-//                 fill="#FF6A00"
-//                 filter="url(#orangeGlow)"
-//                 className="pulse"
-//               />
-//             </g>
-
-//             {/* Text: Mr. */}
-//             <text
-//               x="150"
-//               y="85"
-//               fontSize="64"
-//               fontFamily="Segoe UI, sans-serif"
-//               fontWeight="700"
-//               fill="#FF6A00"
-//               className="pulse"
-//             >
-//               Mr.
-//             </text>
-
-//             {/* Text: Code */}
-//             <text
-//               x="260"
-//               y="85"
-//               fontSize="64"
-//               fontFamily="Segoe UI, sans-serif"
-//               fontWeight="600"
-//               fill="#E5E7EB"
-//             >
-//               Code
-//             </text>
-//           </svg>
+//         {/* Brand Logo */}
+//         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+//           <div className="h-9 w-9 bg-[var(--brand-orange)] rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:rotate-6 transition-transform">
+//             <span className="text-white font-black text-xl">M</span>
+//           </div>
+//           <div className="hidden md:block">
+//             <span className="text-[var(--brand-orange)] font-bold text-xl">Mr.</span>
+//             <span className="text-[var(--text-primary)] font-semibold text-xl ml-1">Code</span>
+//           </div>
 //         </Link>
 
-//         {/* ---------------- Problem Navigation ---------------- */}
+//         {/* Navigation Controls (Problem Page Only) */}
 //         {problemPage && (
-//           <div className="flex items-center gap-4">
-//             <button onClick={() => handleProblemChange(false)}>
-//               <FaChevronLeft />
+//           <div className='flex items-center gap-3 flex-1 justify-center px-4'>
+//             <button
+//               onClick={() => handleProblemChange(false)}
+//               className='flex items-center justify-center p-2 rounded-lg bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--brand-orange)] transition-colors'
+//             >
+//               <FaChevronLeft size={14} />
 //             </button>
-
-//             <Link href="/" className="flex items-center gap-2">
-//               <BsList />
-//               <span>Problem List</span>
+//             <Link
+//               href='/'
+//               className='flex items-center gap-2 font-medium text-[var(--text-secondary)] hover:text-[var(--brand-orange)] whitespace-nowrap transition-colors'
+//             >
+//               <BsList size={18} />
+//               <span className="hidden sm:inline">Problem List</span>
 //             </Link>
-
-//             <button onClick={() => handleProblemChange(true)}>
-//               <FaChevronRight />
+//             <button
+//               onClick={() => handleProblemChange(true)}
+//               className='flex items-center justify-center p-2 rounded-lg bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--brand-orange)] transition-colors'
+//             >
+//               <FaChevronRight size={14} />
 //             </button>
 //           </div>
 //         )}
 
-//         {/* ---------------- Right Section ---------------- */}
-//         <div className="flex items-center gap-5 shrink-0">
+//         {/* Action Buttons */}
+//         <div className="flex items-center gap-3 sm:gap-5 shrink-0">
+
+//           <ThemeToggle />
 
 //           <a
 //             href="https://www.buymeacoffee.com/burakorkmezz"
 //             target="_blank"
 //             rel="noreferrer"
-//             className="inline-flex rounded bg-dark-fill-3 px-3 py-1.5 text-brand-orange hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+//             className="hidden lg:inline-flex rounded-lg bg-[var(--bg-accent)] px-3 py-1.5 text-sm font-medium text-[var(--brand-orange)] hover:bg-[var(--brand-orange)] hover:text-white transition-all duration-300 ease-in-out"
 //           >
 //             Premium
 //           </a>
 
-//           {/* Sign In */}
+//           {/* ✅ SIGN IN */}
 //           {!user && (
 //             <button
 //               onClick={handleLogin}
-//               className="inline-flex rounded bg-brand-orange px-3 py-1.5 text-white hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+//               className="inline-flex rounded-xl bg-[var(--brand-orange)] px-5 py-2 text-sm font-bold text-white shadow-md shadow-orange-500/20 hover:brightness-110 active:scale-95 transition-all duration-300"
 //             >
 //               Sign In
 //             </button>
 //           )}
 
-//           {problemPage && <Timer />}
+//           {/* TIMER */}
+//           {problemPage && user && <Timer />}
 
-//           {/* Profile + Logout */}
+//           {/* ✅ PROFILE + LOGOUT */}
 //           {user && (
-//             <>
+//             <div className="flex items-center gap-3">
 //               <div className="relative group cursor-pointer">
-//                 <img
-//                   src="/avatar.png"
-//                   alt="profile"
-//                   className="h-8 w-8 rounded-full"
-//                 />
-//                 <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-dark-layer-1 text-brand-orange px-3 py-1 rounded shadow-lg scale-0 group-hover:scale-100 transition-all duration-200">
-//                   <p className="text-sm">{user.email}</p>
+//                 <div className="h-9 w-9 rounded-full border-2 border-[var(--brand-orange)] overflow-hidden">
+//                   <img
+//                     src="/avatar.png"
+//                     alt="profile"
+//                     className="w-full h-full object-cover"
+//                   />
+//                 </div>
+
+//                 {/* Hover Tooltip */}
+//                 <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] px-3 py-2 rounded-lg shadow-xl scale-0 group-hover:scale-100 transition-all duration-200 z-50 min-w-max">
+//                   <p className="text-sm font-medium">{user.email}</p>
 //                 </div>
 //               </div>
 
 //               <Logout />
-//             </>
+//             </div>
 //           )}
 //         </div>
 //       </div>
@@ -325,15 +159,16 @@
 // export default Topbar;
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { BsList } from "react-icons/bs";
+import { BsList, BsCodeSlash, BsFileText } from "react-icons/bs";
 import { auth } from "@/firebase/firebase";
 import Logout from "../Buttons/Logout";
 import Timer from "../Timer/Timer";
+import ThemeToggle from "../ThemeToggle";
 import { useAuthModal } from "@/store/useAuthModal";
 import { problems } from "@/utils/problems";
 import { Problem } from "@/mockProblems/problems";
@@ -344,263 +179,149 @@ type TopbarProps = {
 
 const Topbar: React.FC<TopbarProps> = ({ problemPage = false }) => {
   const [user] = useAuthState(auth);
-  const openModal = useAuthModal((s) => s.openModal);
+  const openModal = useAuthModal((s: { openModal: any; }) => s.openModal);
   const router = useRouter();
   const params = useParams();
   const pid = params?.pid as string;
 
+  // Track if we are on a docs page to handle SSR vs Client mismatch
+  const [isDocsPage, setIsDocsPage] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsDocsPage(window.location.pathname.endsWith("/docs"));
+    }
+  }, [pid]);
   /* ---------------- Problem Navigation ---------------- */
-  // const handleProblemChange = (isForward: boolean) => {
-  //   if (!pid) return;
+  const handleProblemChange = (isForward: boolean) => {
+    // 1. Safety Check: If pid is missing or problems aren't loaded, stop here
+    if (!pid || !problems || !problems[pid]) {
+      console.error("Problem data not found for pid:", pid);
+      return;
+    }
 
-  //   const { order } = problems[pid] as unknown as Problem;
-  //   const direction = isForward ? 1 : -1;
-  //   const nextOrder = order + direction;
+    const problemData = problems[pid] as unknown as Problem;
+    const { order } = problemData;
+    const direction = isForward ? 1 : -1;
+    const totalProblems = Object.keys(problems).length;
 
-  //   const nextProblemKey = Object.keys(problems).find(
-  //     (key) => problems[key].order === nextOrder
-  //   );
+    let nextOrder = order + direction;
 
-  //   if (nextProblemKey) {
-  //     router.push(`/problems/${nextProblemKey}`);
-  //   }
-  // };
-const handleProblemChange = (isForward: boolean) => {
-  if (!pid) return;
+    // Loop through the problem list
+    if (nextOrder > totalProblems) nextOrder = 1;
+    if (nextOrder < 1) nextOrder = totalProblems;
 
-  const { order } = problems[pid] as unknown as Problem;
-  const direction = isForward ? 1 : -1;
+    const nextProblemKey = Object.keys(problems).find(
+      (key) => problems[key].order === nextOrder
+    );
 
-  const totalProblems = Object.keys(problems).length;
+    if (nextProblemKey) {
+      const targetPath = isDocsPage
+        ? `/problems/${nextProblemKey}/docs`
+        : `/problems/${nextProblemKey}`;
 
-  let nextOrder = order + direction;
+      router.push(targetPath);
+    }
+  };
 
-  // ✅ If forward and exceeds max → go to 1
-  if (nextOrder > totalProblems) {
-    nextOrder = 1;
-  }
-
-  // ✅ If backward and goes below 1 → go to last
-  if (nextOrder < 1) {
-    nextOrder = totalProblems;
-  }
-
-  const nextProblemKey = Object.keys(problems).find(
-    (key) => problems[key].order === nextOrder
-  );
-
-  if (nextProblemKey) {
-    router.push(`/problems/${nextProblemKey}`);
-  }
-};
-  /* ---------------- AUTH NAVIGATION (WORKING) ---------------- */
+  /* ---------------- AUTH NAVIGATION ---------------- */
   const handleLogin = () => {
-    router.push("/auth");   // ✅ important for your setup
-    openModal("login");     // ✅ open modal
+    router.push("/auth");
+    openModal("login");
   };
 
   return (
-    <nav className="relative z-50 h-12.5 w-full bg-dark-layer-1 px-5">
-      <div className="flex h-full w-full items-center justify-between max-w-300 mx-auto">
+    <nav className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/80 backdrop-blur-md px-4 py-3 sm:px-8">
+      <div className="flex items-center justify-between max-w-7xl mx-auto h-full">
 
-        {/* Logo */}
-
-        <Link href="/" className="flex items-center shrink-0">
-          <svg
-            viewBox="0 0 650 200"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-auto"
-          >
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-
-              <style>
-                {`
-          .pulse {
-            animation: pulse 2s infinite ease-in-out;
-          }
-
-          .float {
-            animation: float 4s infinite ease-in-out;
-          }
-
-          .draw {
-            stroke-dasharray: 400;
-            stroke-dashoffset: 400;
-            animation: draw 2s ease forwards;
-          }
-
-          @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
-          }
-
-          @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-4px); }
-            100% { transform: translateY(0px); }
-          }
-
-          @keyframes draw {
-            to { stroke-dashoffset: 0; }
-          }
-        `}
-              </style>
-            </defs>
-
-            {/* Animated Icon */}
-            <g className="float">
-              <rect
-                x="40"
-                y="40"
-                width="80"
-                height="80"
-                rx="12"
-                stroke="#FF6A00"
-                strokeWidth="4"
-                fill="none"
-                className="draw"
-              />
-
-              <polygon
-                points="80,55 105,80 80,105 55,80"
-                fill="#FF6A00"
-                filter="url(#glow)"
-                className="pulse"
-              />
-            </g>
-
-            {/* Text: Mr. */}
-            <text
-              x="160"
-              y="95"
-              fontSize="64"
-              fontWeight="700"
-              fill="#FF6A00"
-              className="pulse"
-              fontFamily="Segoe UI, sans-serif"
-            >
-              Mr.
-            </text>
-
-            {/* Text: Code */}
-            <text
-              x="270"
-              y="95"
-              fontSize="64"
-              fontWeight="600"
-              fill="#E5E7EB"
-              fontFamily="Segoe UI, sans-serif"
-            >
-              Code
-            </text>
-
-            {/* Tagline */}
-            <text
-              x="160"
-              y="140"
-              fontSize="22"
-              fill="#9CA3AF"
-              fontFamily="Segoe UI, sans-serif"
-            >
-              The Art of Problem Solving
-            </text>
-          </svg>
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+          <div className="h-9 w-9 bg-[var(--brand-orange)] rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20 group-hover:rotate-6 transition-transform">
+            <span className="text-white font-black text-xl">M</span>
+          </div>
+          <div className="hidden md:block">
+            <span className="text-[var(--brand-orange)] font-bold text-xl">Mr.</span>
+            <span className="text-[var(--text-primary)] font-semibold text-xl ml-1">Code</span>
+          </div>
         </Link>
 
-
-        {/* Problem Navigation */}
-        {/* {problemPage && (
-          <div className="flex items-center gap-4 ">
-            <button onClick={() => handleProblemChange(false)}>
-              <FaChevronLeft />
+        {/* Navigation Controls (Problem Page Only) */}
+        {problemPage && (
+          <div className='flex items-center gap-2 sm:gap-4 flex-1 justify-center px-2'>
+            {/* Previous Problem */}
+            <button
+              onClick={() => handleProblemChange(false)}
+              className='flex items-center justify-center p-2 rounded-lg bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--brand-orange)] transition-colors'
+            >
+              <FaChevronLeft size={14} />
             </button>
 
-            <Link href="/" className="flex items-center gap-2">
-              <BsList />
-              <span>Problem List</span>
+            {/* View Toggle (Docs vs Code) */}
+            <Link
+              href={isDocsPage ? `/problems/${pid}` : `/problems/${pid}/docs`}
+              className='flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-accent)] font-medium text-[var(--text-secondary)] hover:text-[var(--brand-orange)] transition-colors border border-transparent hover:border-[var(--brand-orange)]/30'
+            >
+              {isDocsPage ? <BsCodeSlash size={18} /> : <BsFileText size={18} />}
+              <span className="hidden md:inline text-sm">
+                {isDocsPage ? "Editor" : "Explanations"}
+              </span>
             </Link>
 
-            <button onClick={() => handleProblemChange(true)}>
-              <FaChevronRight />
-            </button>
-          </div>
-        )} */}
-        {problemPage && (
-          <div className='flex items-center gap-4 flex-1 justify-center'>
-            <div
-              className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer text-dark-gray-7'
-              onClick={() => handleProblemChange(false)}
-            >
-              <FaChevronLeft />
-            </div>
-
+            {/* Problem List */}
             <Link
               href='/'
-              className='flex items-center gap-2 font-medium max-w-42.5 text-dark-gray-7 hover:text-brand-orange cursor-pointer'
+              className='flex items-center justify-center p-2 rounded-lg bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--brand-orange)] transition-colors'
             >
-              <BsList />
-              <p>Problem List</p>
+              <BsList size={18} />
+
             </Link>
 
-            <div
-              className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer text-dark-gray-7'
+            {/* Next Problem */}
+            <button
               onClick={() => handleProblemChange(true)}
+              className='flex items-center justify-center p-2 rounded-lg bg-[var(--bg-accent)] text-[var(--text-secondary)] hover:text-[var(--brand-orange)] transition-colors'
             >
-              <FaChevronRight />
-            </div>
+              <FaChevronRight size={14} />
+            </button>
           </div>
         )}
 
-        {/* Right Section */}
-        <div className="flex items-center gap-5 shrink-0">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3 sm:gap-5 shrink-0">
+          <ThemeToggle />
 
           <a
-            href="https://www.buymeacoffee.com/burakorkmezz"
+            href="https://www.buymeacoffee.com"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded bg-dark-fill-3 px-3 py-1.5 text-brand-orange hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+            className="hidden lg:inline-flex rounded-lg bg-[var(--bg-accent)] px-3 py-1.5 text-sm font-medium text-[var(--brand-orange)] hover:bg-[var(--brand-orange)] hover:text-white transition-all duration-300"
           >
             Premium
           </a>
 
-          {/* ✅ SIGN IN */}
           {!user && (
             <button
               onClick={handleLogin}
-              className="inline-flex rounded bg-brand-orange px-3 py-1.5 text-white hover:bg-white hover:text-brand-orange hover:border-2 hover:border-brand-orange border-2 border-transparent transition duration-300 ease-in-out"
+              className="inline-flex rounded-xl bg-[var(--brand-orange)] px-5 py-2 text-sm font-bold text-white shadow-md shadow-orange-500/20 hover:brightness-110 active:scale-95 transition-all duration-300"
             >
               Sign In
             </button>
           )}
 
-          {/* {problemPage && <Timer />} */}
           {problemPage && user && <Timer />}
 
-          {/* ✅ PROFILE + LOGOUT */}
           {user && (
-            <>
+            <div className="flex items-center gap-3">
               <div className="relative group cursor-pointer">
-                <img
-                  src="/avatar.png"
-                  alt="profile"
-                  className="h-8 w-8 rounded-full"
-                />
-
-                <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-dark-layer-1 text-brand-orange px-3 py-1 rounded shadow-lg scale-0 group-hover:scale-100 transition-all duration-200">
-                  <p className="text-sm">{user.email}</p>
+                <div className="h-9 w-9 rounded-full border-2 border-[var(--brand-orange)] overflow-hidden">
+                  <img src="/avatar.png" alt="profile" className="w-full h-full object-cover" />
+                </div>
+                <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] px-3 py-2 rounded-lg shadow-xl scale-0 group-hover:scale-100 transition-all duration-200 z-50 min-w-max">
+                  <p className="text-sm font-medium">{user.email}</p>
                 </div>
               </div>
-
               <Logout />
-            </>
+            </div>
           )}
         </div>
       </div>

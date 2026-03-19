@@ -133,18 +133,15 @@ const handleSubmit = async () => {
   if (!user) return toast.error("Please login to submit", { theme: "dark" });
   setIsExecuting(true);
   setOutput(null);
-
   try {
     if (language === "javascript") {
       // --- LOCAL JAVASCRIPT EXECUTION ---
       // We append a return statement so the function can be extracted regardless of how it's declared
       const runCode = `${userCode}; return ${problem.starterFunctionName};`;
       const userFn = new Function(runCode)();
-      
       if (typeof userFn !== "function") {
          throw new Error("Starter function not found");
       }
-
       const success = problemHandlers[pid](userFn);
       if (success) {
         handleSuccess();
@@ -155,12 +152,9 @@ const handleSubmit = async () => {
       // --- REMOTE EXECUTION (C, C++, Java, Python) ---
       const header = LANGUAGE_HEADERS[language] || "";
       const driver = problemDrivers[pid]?.[language] || "";
-      
       // Constructing final code: Headers + User Code + Test Driver
       const finalCode = `${header}\n${userCode}\n${driver}`;
-
       const result = await executeCode(language, finalCode);
-
       // Handle Compilation/Runtime errors from the API
       if (!result || result.run.code !== 0) {
         const errorMsg = result?.run?.stderr || result?.run?.stdout || "Execution failed";
@@ -169,11 +163,9 @@ const handleSubmit = async () => {
       } else {
         const stdout = result.run.stdout.trim();
         setOutput(stdout);
-        
         // Standardized comparison: lowercase and remove all whitespace
         const actual = stdout.toLowerCase().replace(/\s/g, "");
         const expected = problem.examples[0].outputText.toLowerCase().replace(/\s/g, "");
-
         if (actual === expected) {
           handleSuccess();
         } else {

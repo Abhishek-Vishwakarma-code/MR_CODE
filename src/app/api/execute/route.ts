@@ -108,15 +108,12 @@
 // app/api/execute/route.ts
 // src/app/api/execute/route.ts
 import { NextResponse } from "next/server";
-
 export async function POST(req: Request) {
     try {
         const { language, sourceCode } = await req.json();
-
         const apiHeaders = new Headers();
         apiHeaders.append("Content-Type", "application/json");
         apiHeaders.append("X-API-Key", process.env.ONECOMPILER_API_KEY || "");
-
         // Map language to the specific filename OneCompiler expects for the entry point
         const extensions: Record<string, string> = {
             python: "main.py",
@@ -125,7 +122,6 @@ export async function POST(req: Request) {
             c: "main.c",
             javascript: "index.js"
         };
-
         const response = await fetch("https://api.onecompiler.com/v1/run", {
             method: "POST",
             headers: apiHeaders,
@@ -138,7 +134,6 @@ export async function POST(req: Request) {
                 }]
             })
         });
-
         const data = await response.json();
         return NextResponse.json(data);
     } catch (error) {

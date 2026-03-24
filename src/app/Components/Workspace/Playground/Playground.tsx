@@ -156,12 +156,12 @@ const handleSubmit = async () => {
       const finalCode = `${header}\n${userCode}\n${driver}`;
       const result = await executeCode(language, finalCode);
       // Handle Compilation/Runtime errors from the API
-      if (!result || result.run.code !== 0) {
-        const errorMsg = result?.run?.stderr || result?.run?.stdout || "Execution failed";
+      if (!result || result.statusCode !== 200 || result.error) {
+        const errorMsg = result?.error || result?.output || "Execution failed";
         setOutput(`Error:\n${errorMsg}`);
         toast.error("Compilation/Runtime Error", { theme: "dark" });
       } else {
-        const stdout = result.run.stdout.trim();
+        const stdout = (result.output || "").trim();
         setOutput(stdout);
         // Standardized comparison: lowercase and remove all whitespace
         const actual = stdout.toLowerCase().replace(/\s/g, "");

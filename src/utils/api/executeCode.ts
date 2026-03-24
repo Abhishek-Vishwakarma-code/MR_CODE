@@ -33,30 +33,18 @@
 // };
 // utils/api/executeCode.ts
 
-const ONECOMPILER_MAP: Record<string, { id: string; file: string }> = {
-    javascript: { id: "nodejs", file: "index.js" },
-    python: { id: "python", file: "main.py" },
-    cpp: { id: "cpp", file: "main.cpp" },
-    java: { id: "java", file: "Main.java" },
-    c: { id: "c", file: "main.c" }
-};
-
 export const executeCode = async (language: string, sourceCode: string) => {
-    const config = ONECOMPILER_MAP[language.toLowerCase()];
-    if (!config) throw new Error(`Language ${language} is not supported.`);
-
     const response = await fetch("/api/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-            language: config.id, 
-            fileName: config.file, 
-            sourceCode 
+        body: JSON.stringify({
+            language: language.toLowerCase(),
+            sourceCode
         }),
     });
 
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Failed to execute code");
 
-    return data; // Returns the full OneCompiler response object
+    return data;
 };

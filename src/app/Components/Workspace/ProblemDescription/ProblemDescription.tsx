@@ -50,45 +50,58 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem, _solve
     }
     if (updating) return;
     setUpdating(true);
-    await runTransaction(firestore, async (transaction) => {
-      const { problemDoc, userDoc, problemRef, userRef } = await returnUserDataAndProblemData(transaction);
+    try {
+      await runTransaction(firestore, async (transaction) => {
+        const { problemDoc, userDoc, problemRef, userRef } = await returnUserDataAndProblemData(transaction);
 
-      if (userDoc.exists() && problemDoc.exists()) {
-        if (liked) {
-          transaction.update(userRef, {
-            likedProblems: userDoc.data().likedProblems.filter((id: string) => id !== problem.id),
-          });
-          transaction.update(problemRef, {
-            likes: problemDoc.data().likes - 1,
-          });
-          setCurrentProblem((prev) => (prev ? { ...prev, likes: prev.likes - 1 } : null));
-          setData((prev) => ({ ...prev, liked: false }));
-        } else if (disliked) {
-          transaction.update(userRef, {
-            likedProblems: [...userDoc.data().likedProblems, problem.id],
-            dislikedProblems: userDoc.data().dislikedProblems.filter((id: string) => id !== problem.id),
-          });
-          transaction.update(problemRef, {
-            likes: problemDoc.data().likes + 1,
-            dislikes: problemDoc.data().dislikes - 1,
-          });
-          setCurrentProblem((prev) =>
-            prev ? { ...prev, likes: prev.likes + 1, dislikes: prev.dislikes - 1 } : null
-          );
-          setData((prev) => ({ ...prev, liked: true, disliked: false }));
-        } else {
-          transaction.update(userRef, {
-            likedProblems: [...userDoc.data().likedProblems, problem.id],
-          });
-          transaction.update(problemRef, {
-            likes: problemDoc.data().likes + 1,
-          });
-          setCurrentProblem((prev) => (prev ? { ...prev, likes: prev.likes + 1 } : null));
-          setData((prev) => ({ ...prev, liked: true }));
+        if (userDoc.exists() && problemDoc.exists()) {
+          const uData = userDoc.data();
+          const pData = problemDoc.data();
+          
+          const likedProblems = uData.likedProblems || [];
+          const dislikedProblems = uData.dislikedProblems || [];
+          const likes = pData.likes || 0;
+          const dislikes = pData.dislikes || 0;
+
+          if (liked) {
+            transaction.update(userRef, {
+              likedProblems: likedProblems.filter((id: string) => id !== problem.id),
+            });
+            transaction.update(problemRef, {
+              likes: likes - 1,
+            });
+            setCurrentProblem((prev) => (prev ? { ...prev, likes: likes - 1 } : null));
+            setData((prev) => ({ ...prev, liked: false }));
+          } else if (disliked) {
+            transaction.update(userRef, {
+              likedProblems: [...likedProblems, problem.id],
+              dislikedProblems: dislikedProblems.filter((id: string) => id !== problem.id),
+            });
+            transaction.update(problemRef, {
+              likes: likes + 1,
+              dislikes: dislikes - 1,
+            });
+            setCurrentProblem((prev) =>
+              prev ? { ...prev, likes: likes + 1, dislikes: dislikes - 1 } : null
+            );
+            setData((prev) => ({ ...prev, liked: true, disliked: false }));
+          } else {
+            transaction.update(userRef, {
+              likedProblems: [...likedProblems, problem.id],
+            });
+            transaction.update(problemRef, {
+              likes: likes + 1,
+            });
+            setCurrentProblem((prev) => (prev ? { ...prev, likes: likes + 1 } : null));
+            setData((prev) => ({ ...prev, liked: true }));
+          }
         }
-      }
-    });
-    setUpdating(false);
+      });
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred", { position: "top-left", theme: "dark" });
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const handleDislike = async () => {
@@ -98,44 +111,57 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem, _solve
     }
     if (updating) return;
     setUpdating(true);
-    await runTransaction(firestore, async (transaction) => {
-      const { problemDoc, userDoc, problemRef, userRef } = await returnUserDataAndProblemData(transaction);
-      if (userDoc.exists() && problemDoc.exists()) {
-        if (disliked) {
-          transaction.update(userRef, {
-            dislikedProblems: userDoc.data().dislikedProblems.filter((id: string) => id !== problem.id),
-          });
-          transaction.update(problemRef, {
-            dislikes: problemDoc.data().dislikes - 1,
-          });
-          setCurrentProblem((prev) => (prev ? { ...prev, dislikes: prev.dislikes - 1 } : null));
-          setData((prev) => ({ ...prev, disliked: false }));
-        } else if (liked) {
-          transaction.update(userRef, {
-            dislikedProblems: [...userDoc.data().dislikedProblems, problem.id],
-            likedProblems: userDoc.data().likedProblems.filter((id: string) => id !== problem.id),
-          });
-          transaction.update(problemRef, {
-            dislikes: problemDoc.data().dislikes + 1,
-            likes: problemDoc.data().likes - 1,
-          });
-          setCurrentProblem((prev) =>
-            prev ? { ...prev, dislikes: prev.dislikes + 1, likes: prev.likes - 1 } : null
-          );
-          setData((prev) => ({ ...prev, disliked: true, liked: false }));
-        } else {
-          transaction.update(userRef, {
-            dislikedProblems: [...userDoc.data().dislikedProblems, problem.id],
-          });
-          transaction.update(problemRef, {
-            dislikes: problemDoc.data().dislikes + 1,
-          });
-          setCurrentProblem((prev) => (prev ? { ...prev, dislikes: prev.dislikes + 1 } : null));
-          setData((prev) => ({ ...prev, disliked: true }));
+    try {
+      await runTransaction(firestore, async (transaction) => {
+        const { problemDoc, userDoc, problemRef, userRef } = await returnUserDataAndProblemData(transaction);
+        if (userDoc.exists() && problemDoc.exists()) {
+          const uData = userDoc.data();
+          const pData = problemDoc.data();
+          
+          const likedProblems = uData.likedProblems || [];
+          const dislikedProblems = uData.dislikedProblems || [];
+          const likes = pData.likes || 0;
+          const dislikes = pData.dislikes || 0;
+
+          if (disliked) {
+            transaction.update(userRef, {
+              dislikedProblems: dislikedProblems.filter((id: string) => id !== problem.id),
+            });
+            transaction.update(problemRef, {
+              dislikes: dislikes - 1,
+            });
+            setCurrentProblem((prev) => (prev ? { ...prev, dislikes: dislikes - 1 } : null));
+            setData((prev) => ({ ...prev, disliked: false }));
+          } else if (liked) {
+            transaction.update(userRef, {
+              dislikedProblems: [...dislikedProblems, problem.id],
+              likedProblems: likedProblems.filter((id: string) => id !== problem.id),
+            });
+            transaction.update(problemRef, {
+              dislikes: dislikes + 1,
+              likes: likes - 1,
+            });
+            setCurrentProblem((prev) =>
+              prev ? { ...prev, dislikes: dislikes + 1, likes: likes - 1 } : null
+            );
+            setData((prev) => ({ ...prev, disliked: true, liked: false }));
+          } else {
+            transaction.update(userRef, {
+              dislikedProblems: [...dislikedProblems, problem.id],
+            });
+            transaction.update(problemRef, {
+              dislikes: dislikes + 1,
+            });
+            setCurrentProblem((prev) => (prev ? { ...prev, dislikes: dislikes + 1 } : null));
+            setData((prev) => ({ ...prev, disliked: true }));
+          }
         }
-      }
-    });
-    setUpdating(false);
+      });
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred", { position: "top-left", theme: "dark" });
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const handleStar = async () => {
@@ -146,21 +172,25 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem, _solve
     if (updating) return;
     setUpdating(true);
 
-    if (!starred) {
-      const userRef = doc(firestore, "users", user.uid);
-      await updateDoc(userRef, {
-        starredProblems: arrayUnion(problem.id),
-      });
-      setData((prev) => ({ ...prev, starred: true }));
-    } else {
-      const userRef = doc(firestore, "users", user.uid);
-      await updateDoc(userRef, {
-        starredProblems: arrayRemove(problem.id),
-      });
-      setData((prev) => ({ ...prev, starred: false }));
+    try {
+      if (!starred) {
+        const userRef = doc(firestore, "users", user.uid);
+        await updateDoc(userRef, {
+          starredProblems: arrayUnion(problem.id),
+        });
+        setData((prev) => ({ ...prev, starred: true }));
+      } else {
+        const userRef = doc(firestore, "users", user.uid);
+        await updateDoc(userRef, {
+          starredProblems: arrayRemove(problem.id),
+        });
+        setData((prev) => ({ ...prev, starred: false }));
+      }
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred", { position: "top-left", theme: "dark" });
+    } finally {
+      setUpdating(false);
     }
-
-    setUpdating(false);
   };
 
   return (
@@ -355,7 +385,7 @@ function useGetUsersDataOnProblem(problemId: string) {
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         const data = userSnap.data();
-        const { solvedProblems, likedProblems, dislikedProblems, starredProblems } = data;
+        const { solvedProblems = [], likedProblems = [], dislikedProblems = [], starredProblems = [] } = data;
         setData({
           liked: likedProblems.includes(problemId),
           disliked: dislikedProblems.includes(problemId),
